@@ -1,4 +1,9 @@
+import pygame
+from neutreeko.constants import WIDTH, HEIGHT
 from collections import namedtuple
+
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('Neutreeko')
 
 plyr1 = " X "
 plyr2 = " O "
@@ -10,6 +15,7 @@ board = [[empty, plyr2, empty, plyr2, empty],
          [empty, empty, plyr2, empty, empty],
          [empty, plyr1, empty, plyr1, empty]]
 
+auxBoard = board
 
 def draw_menu():
     print("Welcome to Neutreeko\nSelect your preferred game mode")
@@ -63,12 +69,16 @@ def getPiecesCoordinates(player):
                 result.append(str(y*10 + x).zfill(2))
     return result
 
+
+def checkUpPossible(x,y):
+    if (y == 0 or board[y - 1][x] != "   "):
+        return False
+    else: return True
     
 def replaceUp(player, startCoordinates):
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])
-    if (y == 0 or board[y - 1][x] != "   "):
-        print("Cant move up!")
+    if (checkUpPossible(x,y) == False):
         return move(player, x)
     
     done = 1
@@ -84,10 +94,15 @@ def replaceUp(player, startCoordinates):
         
     return x,y
 
+def checkDownPossible(x,y):
+    if (y == 4 or board[y + 1][x] != "   "):
+        return False
+    else: return True
+
 def replaceDown(player, startCoordinates):
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])    
-    if (y == 4 or board[y + 1][x] != "   "):
+    if (checkDownPossible(x,y) == False):
         print("Cant move down!")
         return move(player, startCoordinates)
     
@@ -104,10 +119,15 @@ def replaceDown(player, startCoordinates):
         
     return x,y
 
+def checkLeftPossible(x,y):
+    if (x == 0 or board[y][x - 1] != "   "):
+        return False
+    else: return True
+
 def replaceLeft(player, startCoordinates):
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])    
-    if (x == 0 or board[y][x - 1] != "   "):
+    if (checkLeftPossible(x,y) == False):
         print("Cant move left!")
         return move(player, startCoordinates)
     
@@ -123,11 +143,16 @@ def replaceLeft(player, startCoordinates):
     x = x + 1
         
     return x,y
-    
+
+def checkRightPossible(x,y):
+    if (x == 4 or board[y][x + 1] != "   "):
+        return False
+    else: return True   
+
 def replaceRight(player, startCoordinates):
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])    
-    if (x == 4 or board[y][x + 1] != "   "):
+    if (checkRightPossible(x,y) == False):
         print("Cant move right!")
         return move(player, startCoordinates)
     
@@ -142,7 +167,12 @@ def replaceRight(player, startCoordinates):
         
     x = x - 1
     return x,y
-    
+
+def checkUpRightPossible(x,y):
+    if (y == 0 or x == 4 or board[y - 1][x + 1] != "   "):
+        return False
+    else: return True  
+
 def replaceUpRight(player, startCoordinates):
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])
@@ -164,6 +194,11 @@ def replaceUpRight(player, startCoordinates):
     x = x - 1
         
     return x,y
+
+def checkUpLeftPossible(x,y):
+    if (y == 0 or x == 0 or board[y - 1][x - 1] != "   "):
+        return False
+    else: return True  
 
 def replaceUpLeft(player, startCoordinates):
     x = int(startCoordinates[0])
@@ -187,6 +222,11 @@ def replaceUpLeft(player, startCoordinates):
         
     return x,y
 
+def checkDownRightPossible(x,y):
+    if (y == 4 or x == 4 or board[y + 1][x + 1] != "   "):
+        return False
+    else: return True  
+
 def replaceDownRight(player, startCoordinates):
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])
@@ -209,6 +249,11 @@ def replaceDownRight(player, startCoordinates):
         
     return x,y
 
+def checkDownLeftPossible(x,y):
+    if (y == 4 or x == 0 or board[y + 1][x - 1] != "   "):
+        return False
+    else: return True  
+
 def replaceDownLeft(player, startCoordinates):
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])
@@ -228,8 +273,6 @@ def replaceDownLeft(player, startCoordinates):
         
     y = y - 1
     x = x + 1
-    print(x)
-    print(y)
     return x,y
     
 def replace(coords, player, startCoordinates):
@@ -270,12 +313,12 @@ def updateBoard(player, finalCoords, startCoordinates):
     x = finalCoords[0]
     y = finalCoords[1]
     if (player == 1):
-        board[y][x] = " X "
-    else : board[y][x] = " O "
+        auxBoard[y][x] = " X "
+    else : auxBoard[y][x] = " O "
     
     x = int(startCoordinates[0])
     y = int(startCoordinates[1])
-    board[y][x] = empty
+    auxBoard[y][x] = empty
     
     return
 
@@ -288,7 +331,7 @@ def turn(player):
         print("Invalid Coordinates. Try again\n")
         return turn(player)
     
-    startCoordinates = str(letters[piece[0]] * 10 + int(piece[1]) - 1).zfill(2);
+    startCoordinates = str(letters[piece[0]] * 10 + int(piece[1]) - 1).zfill(2)
     
     if (startCoordinates not in possible):
         print("That square does not contain a valid piece. Try again\n")
@@ -304,15 +347,15 @@ def checkPieces(list):
     pieces = [int(list[0]), int(list[1]), int(list[2])]
     
     if (pieces[0] + 10 == pieces[1] and pieces[1] + 10 == pieces[2]):
-        return True;
+        return True
     if (pieces[0] + 1 == pieces[1] and pieces[1] + 1 == pieces[2]):
-        return True;    
+        return True    
     if (pieces[0] + 11 == pieces[1] and pieces[1] + 11 == pieces[2]):
-        return True;    
+        return True    
     if (pieces[0] - 9 == pieces[2] and pieces[1] - 9 == pieces[2]):
-        return True;
+        return True
     
-    return False;
+    return False
 
 def checkWin():
     player1Pieces = getPiecesCoordinates(1)
@@ -320,33 +363,81 @@ def checkWin():
     
     if (checkPieces(player1Pieces)):
         print("Player 1 Wins!")
-        return True;
+        return True
     elif (checkPieces(player2Pieces)):
         print("Player 2 Wins!")
-        return True;
+        return True
     
-    return False;   
+    return False   
+
+"""
+Funcao de analise:
+
+Resultado = Pontos do Jogador 1 - Pontos do Jogador 2
+
+
+Atribuicao de Pontos:
+
+Mate em 1 - 100 pontos
+Impedir Mate em 1 do Adversario - 50 pontos
+Fazer 2 em linha - 20 pontos
+Impedir 2 em linha do Adversario - 10 pontos
+Peca a uma casa de distancia de outra Peca - 2 pontos
+Peca a duas casas de distancia de outra Peca - 1 ponto
+ 
+
+"""
+
+def getPlayer1PossibleMoves():
+    botPlaying = True
+    player1Pieces = getPiecesCoordinates(1)
+    possibleMoves = []
+    for i in player1Pieces:
+        moves = []
+        x = int(i[0])
+        y = int(i[1])
+        if checkUpPossible(x,y) is True:
+            moves.append(replaceUp(1,i))
+        if checkDownPossible(x,y) is True:
+            moves.append(replaceDown(1,i))
+        if checkRightPossible(x,y) is True:
+            moves.append(replaceRight(1,i))
+        if checkLeftPossible(x,y) is True:
+            moves.append(replaceLeft(1,i))
+        if checkUpRightPossible(x,y) is True:
+            moves.append(replaceUpRight(1,i))
+        if checkUpLeftPossible(x,y) is True:
+            moves.append(replaceUpLeft(1,i))
+        if checkDownRightPossible(x,y) is True:
+            moves.append(replaceDownRight(1,i))
+        if checkDownLeftPossible(x,y) is True:
+            moves.append(replaceDownLeft(1,i))
+        possibleMoves.append(moves)
+
+    print(possibleMoves)
+
+
+def analyzeBoardPlayer1():
+    getPlayer1PossibleMoves()
+
+def analyzeBoard():
+    analyzeBoardPlayer1()
 
 def pvp():
     drawBoard()
     player = 1
     done = 1
     while(done == 1):
-        if (player == 1):
+        '''if (player == 1):
             print("Player 1 Turn\n")
             turn(1)
         else:
             print("Player 2 Turn\n")
             turn(2)
-        player = 1 + (player % 2)
+        player = 1 + (player % 2)'''
         drawBoard()
+        analyzeBoard()
+        board = auxBoard
         if (checkWin()):
             return
-
-def main():
-    gameMode = draw_menu()
-    if (gameMode == 1):
-        return pvp()
     
-    
-main()
