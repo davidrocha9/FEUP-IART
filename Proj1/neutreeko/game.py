@@ -138,4 +138,21 @@ class Game:
     def update(self):
         self.board.draw(self.win)
         pygame.display.update()
+
+    """
+    Funcao de analise:
+    Resultado = Pontos do Jogador 1 - Pontos do Jogador 2
+
+    Atribuicao de Pontos:
+
+    Mate em 1 - 100 pontos
+    Impedir Mate em 1 do Adversario - 50 pontos
+    Fazer 2 em linha - 20 pontos
+    Impedir 2 em linha do Adversario - 10 pontos
+    Peca a uma casa de distancia de outra Peca - 2 pontos
+    Peca a duas casas de distancia de outra Peca - 1 ponto
+    
+
+    """
+
         
