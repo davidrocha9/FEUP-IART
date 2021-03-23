@@ -1,14 +1,14 @@
 import pygame
-pygame.init()
-
+import pygame_menu
 from neutreeko.constants import *
 from neutreeko.game import Game
+
+pygame.init()
 
 FPS = 60
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Neutreeko')
-
 END_FONT = pygame.font.Font('freesansbold.ttf', 32)
 
 def get_row_col_from_mouse(pos):
@@ -24,7 +24,7 @@ def display_message(winner):
     pygame.display.update()
     pygame.time.delay(3000)
 
-def main():
+def start():
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
@@ -49,7 +49,51 @@ def main():
         game.update()
         pygame.display.update()
 
-    pygame.quit()
 
+
+def set_difficulty(value, difficulty):
+    # To Do
+    pass
+
+def start_the_game():
+    start()
+
+def set_mode(value, mode):
+    #To Do
+    pass
+
+def set_method(value, method):
+    #To Do
+    pass
+
+def set_heuristic(value, heuristic):
+    #To Do
+    pass
+
+menu = pygame_menu.Menu(WIDTH, HEIGHT, 'Neutreeko',
+                       theme=pygame_menu.themes.THEME_DARK)
+
+#menu.add.text_input('Name :', default='John Doe')
+menu.add.button('Play', start_the_game)
+menu.add.selector('Mode :', [('Player v Player', 1), ('Player v AI', 2), ('AI v AI', 3)], onchange=set_mode)
+menu.add.selector('Search Method :', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2), ('Negamax', 3)], onchange=set_method)
+menu.add.selector('Heuristic :', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_heuristic)
+#menu.add.selector('Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
+menu.add.button('Quit', pygame_menu.events.EXIT)
+
+def main():
+    running = True
+    while running:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                running = False
+        
+        if menu.is_enabled():
+            menu.update(events)
+            menu.draw(WIN)
+
+        pygame.display.update()
+    pygame.quit()
 
 main()
