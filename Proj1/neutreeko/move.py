@@ -1,8 +1,8 @@
-from .constants import RED, WHITE, SQUARE_SIZE
+from .constants import WHITE, LIGHTBLUE, SQUARE_SIZE
 import pygame
 
 class Move:
-    PADDING = 70
+    PADDING = 37.5
     BORDER = 2
 
     def __init__(self, row, col, color):
@@ -20,8 +20,8 @@ class Move:
 
     def draw(self, win):
         radius = SQUARE_SIZE//2 - self.PADDING
-        pygame.draw.circle(win, self.color, (self.x, self.y), radius)
-        pygame.draw.circle(win, self.color, (self.x, self.y), radius + self.BORDER)
+        pygame.draw.circle(win, self.color, (160 + self.x, 160 + self.y), radius)
+        pygame.draw.circle(win, self.color, (160 + self.x, 160 + self.y), radius + self.BORDER)
 
     def __repr__(self):
         return str(self.color)
