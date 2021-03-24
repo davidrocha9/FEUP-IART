@@ -18,7 +18,7 @@ board = [[empty, plyr2, empty, plyr2, empty],
 auxBoard = board
 
 def draw_menu():
-    print("Welcome to Neutreeko\nSelect your preferred game mode")
+    print("Welcome to Neutreeko\nSelect your preferWHITE game mode")
     print("")
     print("1 - Player VS Player\n2 - Player VS PC\n3 - PC VS PC")
     done = True
