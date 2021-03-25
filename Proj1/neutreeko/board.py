@@ -18,9 +18,9 @@ class Board:
         for row in range(ROWS):
             for col in range(COLS):
                 if ((row % 2 == 0 and col % 2 == 0) or (row % 2 == 1 and col % 2 == 1)):
-                    pygame.draw.rect(win, LIGHTBLUE, (200 + row*SQUARE_SIZE, 220 + col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+                    pygame.draw.rect(win, LIGHTBLUE, (175 + row*SQUARE_SIZE, 220 + col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
                 else:
-                    pygame.draw.rect(win, BLACK, (200 + row*SQUARE_SIZE, 220 + col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+                    pygame.draw.rect(win, BLACK, (175 + row*SQUARE_SIZE, 220 + col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def assignPieces(self):
         for x in range(5):
