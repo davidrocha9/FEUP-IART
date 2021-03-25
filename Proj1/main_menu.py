@@ -2,7 +2,7 @@ import pygame
 import pygame_menu
 from neutreeko.constants import *
 from neutreeko.game import Game
-from minimax.algorithm import *
+from minimax.algorithm import AI
 
 pygame.init()
 
@@ -33,13 +33,21 @@ def drawCards():
     #WIN.fill(PURPLE)
     pygame.draw.rect(WIN, GREY, (150, 100, 500, 100))
     pygame.draw.rect(WIN, GREY, (150, 650, 500, 100))
-    pygame.draw.rect(WIN, WHITE, (620, 160, 25, 200)) #Barra branca
-    pygame.draw.rect(WIN, BLUE, (620, 360, 25, 200)) #Barra preta
+    pygame.draw.rect(WIN, WHITE, (635, 220, 25, 200)) #Barra branca
+    pygame.draw.rect(WIN, BLUE, (635, 420, 25, 200)) #Barra preta
+
+def updateBars(p1, p2):
+    total = p1 + p2
+    p1Percentage = float(p1/total)
+    p2Percentage = float(p2/total)
+    pygame.draw.rect(WIN, WHITE, (635, 220, 25, p2Percentage * 400)) #Barra branca
+    pygame.draw.rect(WIN, BLUE, (635, 220 + p2Percentage * 400, 25, p1Percentage * 400)) #Barra preta
 
 def start():
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
+    ai = AI()
     whiteBarY = 160
     blackBarY = 360
     drawCards()
@@ -53,7 +61,10 @@ def start():
                 run = False
 
             if game.turn == 2:
-                value, new_board = minimax(game.board, 6, 2, float('-inf'), float('+inf'))
+                value, new_board, res = ai.minimax(game.board, 4, 2, float('-inf'), float('+inf'), 0)
+                eval1 = new_board.evaluationPlayer(1)
+                eval2 = new_board.evaluationPlayer(2)
+                updateBars(eval1, eval2)
                 game.board = new_board
                 game.update()
                 winner = game.board.checkWin()
@@ -65,8 +76,11 @@ def start():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     row, col = get_row_col_from_mouse(pos)
-                    game.select(row, col)
-
+                    movePlayed = game.select(row, col)
+                    if (movePlayed == 1):
+                        eval1 = game.board.evaluationPlayer(1)
+                        eval2 = game.board.evaluationPlayer(2)
+                        updateBars(eval1, eval2)
                     game.update()
                     winner = game.board.checkWin()
                     if (winner > 0): 

@@ -83,6 +83,7 @@ class Game:
                         continue
                     else:
                         self.board.board[pair[0]][pair[1]] = 0
+                return 1
         
 
     def update(self):
