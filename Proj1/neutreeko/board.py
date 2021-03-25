@@ -404,6 +404,19 @@ class Board:
         
         return eval
 
+    def evaluationPlayer(self, player):
+        eval = 0
+        playerPieces = self.getPiecesCoordinates(player)
+
+        #Verificar 3 em linha
+        if (self.check3inARow(playerPieces)):
+            eval += 5000
+
+        #Verificar pecas adjacentes
+        eval = eval + self.checkSurrounding(playerPieces)
+
+        return eval
+
 
     def evaluation(self):
         eval = 0

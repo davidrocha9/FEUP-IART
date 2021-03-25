@@ -1,8 +1,9 @@
 import pygame
 import pygame_menu
+import time
 from neutreeko.constants import *
 from neutreeko.game import Game
-from minimax.algorithm import *
+from minimax.algorithm import AI
 
 pygame.init()
 
@@ -11,8 +12,12 @@ FPS = 60
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Neutreeko')
 END_FONT = pygame.font.Font('freesansbold.ttf', 32)
-global global_mode
+global global_mode, global_heuristic, global_method, global_pc1, global_pc2
 global_mode = "pvp"
+global_heuristic = 2
+global_method = 1
+global_pc1 = 1
+global_pc2 = 1
 
 def get_row_col_from_mouse(pos):
     x, y = pos
@@ -23,7 +28,7 @@ def get_row_col_from_mouse(pos):
     return row, col
 
 def display_message(winner):
-    pygame.draw.rect(WIN, GREEN, (SQUARE_SIZE, 1.5*SQUARE_SIZE, 3*SQUARE_SIZE, 2*SQUARE_SIZE))
+    pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
     end_text = END_FONT.render("Player " + winner + " won!", 1, BLACK)
     WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
     pygame.display.update()
@@ -33,13 +38,21 @@ def drawCards():
     #WIN.fill(PURPLE)
     pygame.draw.rect(WIN, GREY, (150, 100, 500, 100))
     pygame.draw.rect(WIN, GREY, (150, 650, 500, 100))
-    pygame.draw.rect(WIN, WHITE, (620, 160, 25, 200)) #Barra branca
-    pygame.draw.rect(WIN, BLUE, (620, 360, 25, 200)) #Barra preta
+    pygame.draw.rect(WIN, WHITE, (635, 220, 25, 200)) #Barra branca
+    pygame.draw.rect(WIN, BLUE, (635, 420, 25, 200)) #Barra preta
+
+def updateBars(p1, p2):
+    total = p1 + p2
+    p1Percentage = float(p1/total)
+    p2Percentage = float(p2/total)
+    pygame.draw.rect(WIN, WHITE, (635, 220, 25, p2Percentage * 400)) #Barra branca
+    pygame.draw.rect(WIN, BLUE, (635, 220 + p2Percentage * 400, 25, p1Percentage * 400)) #Barra preta
 
 def start():
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
+    ai = AI()
     whiteBarY = 160
     blackBarY = 360
     drawCards()
@@ -51,27 +64,77 @@ def start():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
-            if game.turn == 2:
-                value, new_board = minimax(game.board, 6, 2, float('-inf'), float('+inf'))
-                game.board = new_board
-                game.update()
-                winner = game.board.checkWin()
-                if (winner > 0): 
-                    display_message(str(winner)) 
-                    run = False
-                game.turn = 1
-            else:
+            elif global_mode == "pvp":
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     row, col = get_row_col_from_mouse(pos)
-                    game.select(row, col)
-
+                    movePlayed = game.select(row, col)
+                    if (movePlayed == 1):
+                        eval1 = game.board.evaluationPlayer(1)
+                        eval2 = game.board.evaluationPlayer(2)
+                        updateBars(eval1, eval2)
+                    game.update()
+                    winner = game.board.checkWin()
+                    if (winner > 0): 
+                        display_message(str(winner)) 
+                        time.sleep(1)
+                        run = False
+            elif global_mode == "pvc":
+                if game.turn == 2:
+                    value, new_board, res = ai.minimax(game.board, global_heuristic, 2, float('-inf'), float('+inf'), 0)
+                    eval1 = new_board.evaluationPlayer(1)
+                    eval2 = new_board.evaluationPlayer(2)
+                    updateBars(eval1, eval2)
+                    game.board = new_board
                     game.update()
                     winner = game.board.checkWin()
                     if (winner > 0): 
                         display_message(str(winner)) 
                         run = False
+                    game.turn = 1
+                else:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        pos = pygame.mouse.get_pos()
+                        row, col = get_row_col_from_mouse(pos)
+                        movePlayed = game.select(row, col)
+                        if (movePlayed == 1):
+                            eval1 = game.board.evaluationPlayer(1)
+                            eval2 = game.board.evaluationPlayer(2)
+                            updateBars(eval1, eval2)
+                        game.update()
+                        winner = game.board.checkWin()
+                        if (winner > 0): 
+                            display_message(str(winner)) 
+                            run = False
+            elif global_mode == "cvc":
+                if game.turn == 1:
+                    value, new_board, res = ai.minimax(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
+                    time.sleep(1)
+                    eval1 = new_board.evaluationPlayer(1)
+                    eval2 = new_board.evaluationPlayer(2)
+                    updateBars(eval1, eval2)
+                    game.board = new_board
+                    game.update()
+                    winner = game.board.checkWin()
+                    if (winner > 0): 
+                        time.sleep(1)
+                        display_message(str(winner)) 
+                        run = False
+                    game.turn = 2
+                elif game.turn == 2:
+                    value, new_board, res = ai.minimax(game.board, global_pc1, 2, float('-inf'), float('+inf'), 0)
+                    time.sleep(1)
+                    eval1 = new_board.evaluationPlayer(1)
+                    eval2 = new_board.evaluationPlayer(2)
+                    updateBars(eval1, eval2)
+                    game.board = new_board
+                    game.update()
+                    winner = game.board.checkWin()
+                    if (winner > 0): 
+                        time.sleep(1)
+                        display_message(str(winner)) 
+                        run = False
+                    game.turn = 1
 
         game.update()
         pygame.display.update()
@@ -121,20 +184,29 @@ def set_mode(value, mode):
     
 
 def set_method(value, method):
-    #To Do
     pass
 
 def set_heuristic(value, heuristic):
-    #To Do
-    pass
+    global global_heuristic
+    if heuristic == 1:
+        global_heuristic = 2
+    elif heuristic == 2:
+        global_heuristic = 4
+    elif heuristic == 3:
+        global_heuristic = 6
+    
 
-def set_difficulty_pc1(value, difficulty):
-    #To Do
-    pass
+def set_difficulty_pc1(value, difficulty1):
+    global global_pc1
+    if difficulty1 == 1: global_pc1 = 2
+    elif difficulty1 == 2: global_pc1 = 3
+    elif difficulty1 == 3: global_pc1 = 4
 
-def set_difficulty_pc2(value, difficulty):
-    #To Do
-    pass
+def set_difficulty_pc2(value, difficult2):
+    global global_pc2
+    if difficulty2 == 1: global_pc2 = 2
+    elif difficulty2 == 2: global_pc2 = 3
+    elif difficulty2 == 3: global_pc2 = 4
 
 mytheme = pygame_menu.themes.THEME_DARK.copy()
 
