@@ -2,6 +2,7 @@ import pygame
 import pygame_menu
 from neutreeko.constants import *
 from neutreeko.game import Game
+from minimax.algorithm import *
 
 pygame.init()
 
@@ -15,6 +16,8 @@ global_mode = "pvp"
 
 def get_row_col_from_mouse(pos):
     x, y = pos
+    x -= 200
+    y -= 220
     row = y // SQUARE_SIZE
     col = x // SQUARE_SIZE
     return row, col
@@ -27,9 +30,9 @@ def display_message(winner):
     pygame.time.delay(3000)
 
 def drawCards():
-    WIN.fill(PURPLE)
-    pygame.draw.rect(pygame.display.set_mode((500, 800)), GREY, (110, 30, 500, 100))
-    pygame.draw.rect(WIN, GREY, (110, 590, 500, 100))
+    #WIN.fill(PURPLE)
+    pygame.draw.rect(WIN, GREY, (150, 100, 500, 100))
+    pygame.draw.rect(WIN, GREY, (150, 650, 500, 100))
     pygame.draw.rect(WIN, WHITE, (620, 160, 25, 200)) #Barra branca
     pygame.draw.rect(WIN, BLUE, (620, 360, 25, 200)) #Barra preta
 
@@ -40,7 +43,7 @@ def start():
     whiteBarY = 160
     blackBarY = 360
     drawCards()
-
+    
     while run:
         clock.tick(FPS)
         pygame.display.update()
@@ -50,7 +53,7 @@ def start():
                 run = False
 
             if game.turn == 2:
-                value, new_board = minimax(game.board, 5, 2, float('-inf'), float('+inf'))
+                value, new_board = minimax(game.board, 6, 2, float('-inf'), float('+inf'))
                 game.board = new_board
                 game.update()
                 winner = game.board.checkWin()
