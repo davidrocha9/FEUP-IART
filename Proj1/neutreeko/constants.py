@@ -11,3 +11,5 @@ WHITE = (118, 212, 230)
 BLUE = (61, 61, 61) #Preto suave
 GREY = (128,128,128) 
 BLACK = (101, 184, 201)
+LIGHTBLUE = (25,25,25)
+PURPLE = (0,0,0)

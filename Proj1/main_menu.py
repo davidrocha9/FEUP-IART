@@ -26,27 +26,49 @@ def display_message(winner):
     pygame.display.update()
     pygame.time.delay(3000)
 
+def drawCards():
+    WIN.fill(PURPLE)
+    pygame.draw.rect(pygame.display.set_mode((500, 800)), GREY, (110, 30, 500, 100))
+    pygame.draw.rect(WIN, GREY, (110, 590, 500, 100))
+    pygame.draw.rect(WIN, WHITE, (620, 160, 25, 200)) #Barra branca
+    pygame.draw.rect(WIN, BLUE, (620, 360, 25, 200)) #Barra preta
+
 def start():
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
+    whiteBarY = 160
+    blackBarY = 360
+    drawCards()
 
     while run:
         clock.tick(FPS)
+        pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                row, col = get_row_col_from_mouse(pos)
-                game.select(row, col)
+            if game.turn == 2:
+                value, new_board = minimax(game.board, 5, 2, float('-inf'), float('+inf'))
+                game.board = new_board
                 game.update()
-                winner = game.checkWin()
+                winner = game.board.checkWin()
                 if (winner > 0): 
-                    display_message(str(winner))
+                    display_message(str(winner)) 
                     run = False
+                game.turn = 1
+            else:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    row, col = get_row_col_from_mouse(pos)
+                    game.select(row, col)
+
+                    game.update()
+                    winner = game.board.checkWin()
+                    if (winner > 0): 
+                        display_message(str(winner)) 
+                        run = False
 
         game.update()
         pygame.display.update()
