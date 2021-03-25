@@ -80,35 +80,64 @@ def start():
                         time.sleep(1)
                         run = False
             elif global_mode == "pvc":
-                if game.turn == 2:
-                    value, new_board, res = ai.minimax(game.board, global_heuristic, 2, float('-inf'), float('+inf'), 0)
-                    eval1 = new_board.evaluationPlayer(1)
-                    eval2 = new_board.evaluationPlayer(2)
-                    updateBars(eval1, eval2)
-                    game.board = new_board
-                    game.update()
-                    winner = game.board.checkWin()
-                    if (winner > 0): 
-                        display_message(str(winner)) 
-                        run = False
-                    game.turn = 1
-                else:
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        pos = pygame.mouse.get_pos()
-                        row, col = get_row_col_from_mouse(pos)
-                        movePlayed = game.select(row, col)
-                        if (movePlayed == 1):
-                            eval1 = game.board.evaluationPlayer(1)
-                            eval2 = game.board.evaluationPlayer(2)
-                            updateBars(eval1, eval2)
+                print(global_method)
+                if global_method == 1:
+                    if game.turn == 2:
+                        value, new_board, res = ai.minimax(game.board, global_heuristic, 2, float('-inf'), float('+inf'), 0)
+                        eval1 = new_board.evaluationPlayer(1)
+                        eval2 = new_board.evaluationPlayer(2)
+                        updateBars(eval1, eval2)
+                        game.board = new_board
                         game.update()
                         winner = game.board.checkWin()
                         if (winner > 0): 
                             display_message(str(winner)) 
                             run = False
+                        game.turn = 1
+                    else:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            pos = pygame.mouse.get_pos()
+                            row, col = get_row_col_from_mouse(pos)
+                            movePlayed = game.select(row, col)
+                            if (movePlayed == 1):
+                                eval1 = game.board.evaluationPlayer(1)
+                                eval2 = game.board.evaluationPlayer(2)
+                                updateBars(eval1, eval2)
+                            game.update()
+                            winner = game.board.checkWin()
+                            if (winner > 0): 
+                                display_message(str(winner)) 
+                                run = False
+                elif global_method == 2:
+                    if game.turn == 2:
+                        value, new_board, res = ai.minimax_ab(game.board, global_heuristic, 2, float('-inf'), float('+inf'), 0)
+                        eval1 = new_board.evaluationPlayer(1)
+                        eval2 = new_board.evaluationPlayer(2)
+                        updateBars(eval1, eval2)
+                        game.board = new_board
+                        game.update()
+                        winner = game.board.checkWin()
+                        if (winner > 0): 
+                            display_message(str(winner)) 
+                            run = False
+                        game.turn = 1
+                    else:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            pos = pygame.mouse.get_pos()
+                            row, col = get_row_col_from_mouse(pos)
+                            movePlayed = game.select(row, col)
+                            if (movePlayed == 1):
+                                eval1 = game.board.evaluationPlayer(1)
+                                eval2 = game.board.evaluationPlayer(2)
+                                updateBars(eval1, eval2)
+                            game.update()
+                            winner = game.board.checkWin()
+                            if (winner > 0): 
+                                display_message(str(winner)) 
+                                run = False
             elif global_mode == "cvc":
                 if game.turn == 1:
-                    value, new_board, res = ai.minimax(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
+                    value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
                     time.sleep(1)
                     eval1 = new_board.evaluationPlayer(1)
                     eval2 = new_board.evaluationPlayer(2)
@@ -122,7 +151,7 @@ def start():
                         run = False
                     game.turn = 2
                 elif game.turn == 2:
-                    value, new_board, res = ai.minimax(game.board, global_pc1, 2, float('-inf'), float('+inf'), 0)
+                    value, new_board, res = ai.minimax_ab(game.board, global_pc1, 2, float('-inf'), float('+inf'), 0)
                     time.sleep(1)
                     eval1 = new_board.evaluationPlayer(1)
                     eval2 = new_board.evaluationPlayer(2)
@@ -184,16 +213,15 @@ def set_mode(value, mode):
     
 
 def set_method(value, method):
-    pass
+    global global_method
+    if method == 1: global_method = 1
+    elif method == 2: global_method = 2
 
 def set_heuristic(value, heuristic):
     global global_heuristic
-    if heuristic == 1:
-        global_heuristic = 2
-    elif heuristic == 2:
-        global_heuristic = 4
-    elif heuristic == 3:
-        global_heuristic = 6
+    if heuristic == 1: global_heuristic = 2
+    elif heuristic == 2: global_heuristic = 4
+    elif heuristic == 3: global_heuristic = 6
     
 
 def set_difficulty_pc1(value, difficulty1):
