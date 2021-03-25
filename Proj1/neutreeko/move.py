@@ -20,8 +20,8 @@ class Move:
 
     def draw(self, win):
         radius = SQUARE_SIZE//2 - self.PADDING
-        pygame.draw.circle(win, self.color, (200 + self.x, 220 + self.y), radius)
-        pygame.draw.circle(win, self.color, (200 + self.x, 220 + self.y), radius + self.BORDER)
+        pygame.draw.circle(win, self.color, (175 + self.x, 220 + self.y), radius)
+        pygame.draw.circle(win, self.color, (175 + self.x, 220 + self.y), radius + self.BORDER)
 
     def __repr__(self):
         return str(self.color)
