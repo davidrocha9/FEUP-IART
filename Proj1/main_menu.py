@@ -1,79 +1,15 @@
 import pygame
 from pygame import gfxdraw
 import pygame_menu
+pygame.init()
+
 import time
 from neutreeko.constants import *
 from neutreeko.game import Game
 from minimax.algorithm import AI
 import time
 import random
-
-pygame.init()
-
-FPS = 60
-
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Neutreeko')
-END_FONT = pygame.font.Font('freesansbold.ttf', 32)
-talkFont = pygame.font.Font('freesansbold.ttf', 15)
-global global_mode, global_heuristic, global_method, global_pc1, global_pc2
-global_mode = "pvp"
-global_heuristic = 2
-global_method = 1
-global_pc1 = 1
-global_pc2 = 1
-
-lines = ["This is all theory.", "*looks at ceiling and scratches head*", "Takes, takes and takes... I think this is winning.", "Is this a move? Probably. Let's play it.", "Let's keep going.", "Chat, this has to be winning!", "I'll just play my juicer here.", "If takes I just take, and then I must be winning.", "I go here, here, here and here and I win."]
-
-def get_row_col_from_mouse(pos):
-    x, y = pos
-    x -= 175
-    y -= 220
-    row = y // SQUARE_SIZE
-    col = x // SQUARE_SIZE
-    return row, col
-
-def display_message(winner):
-    pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
-    end_text = END_FONT.render("Player " + winner + " won!", 1, BLACK)
-    WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
-    pygame.display.update()
-    time.sleep(3)
-
-def drawCards():
-    #WIN.fill(PURPLE)
-    pygame.draw.rect(WIN, CARDCOLOR, (150, 90, 500, 100), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
-    pygame.draw.rect(WIN, WHITE, (680, 220, 25, 225)) #Barra branca
-    pygame.draw.rect(WIN, BLUE, (680, 445, 25, 225)) #Barra preta
-
-def updateBars(p1, p2):
-    total = p1 + p2
-    p1Percentage = float(p1/total)
-    p2Percentage = float(p2/total)
-    pygame.draw.rect(WIN, WHITE, (680, 220, 25, p2Percentage * 450)) #Barra branca
-    pygame.draw.rect(WIN, BLUE, (680, 220 + p2Percentage * 450, 25, p1Percentage * 450)) #Barra preta
-
-def drawWelcome():
-    pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
-    pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
-    hint = talkFont.render("Let's see what you have prepared for me.", True, (0,0,0))
-    WIN.blit(hint, (175, 130))
-
-def drawLine():
-    pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
-    pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
-    x = random.randint(0,len(lines)-1)
-    hint = talkFont.render(lines[x], True, (0,0,0))
-    WIN.blit(hint, (175, 130))
-
-def drawEnding(player):
-    pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
-    pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
-    if (player == 2):
-        hint = talkFont.render("Good, but not good enough for Magnus.", True, (0,0,0))
-    else:
-        hint = talkFont.render("How did I not see that? I'm so bad.", True, (0,0,0))
-    WIN.blit(hint, (175, 130))
+from bots.easy import *
 
 def start():
     run = True
@@ -82,13 +18,9 @@ def start():
     ai = AI()
     whiteBarY = 160
     blackBarY = 360
-    drawCards()
-    hint = END_FONT.render('Press H for a Hint', True, (0,0,0))
-    WIN.blit(hint, (265, 700))
-    image = pygame.image.load(r'.\assets\hikaru.png')
-    WIN.blit(image, (550, 100))
-    drawWelcome()
-    
+    botStarted = False
+
+
     while run:
         clock.tick(FPS)
         pygame.display.update()
@@ -104,82 +36,49 @@ def start():
                     if (movePlayed == 1):
                         eval1 = game.board.evaluationPlayer(1)
                         eval2 = game.board.evaluationPlayer(2)
-                        updateBars(eval1, eval2)
+                        updateBars(WIN, eval1, eval2)
                     game.update()
                     winner = game.board.checkWin()
                     if (winner > 0): 
-                        display_message(str(winner)) 
+                        display_message(WIN, str(winner)) 
                         time.sleep(1)
                         run = False
             elif global_mode == "pvc":
-                print(global_method)
+                if botStarted is False:
+                    drawCards(WIN)
+                    hint = END_FONT.render('Press H for a Hint', True, (0,0,0))
+                    drawWelcome(WIN, global_heuristic)
+                    drawName(WIN, global_heuristic)
+                    botStarted = True
+                    WIN.blit(hint, (265, 720))
+                    if (global_heuristic == 2):
+                        image = pygame.image.load(r'.\assets\xqc.png')
+                        WIN.blit(image, (550, 100))
+                    elif (global_heuristic == 4):
+                        image = pygame.image.load(r'.\assets\botez.png')
+                        WIN.blit(image, (550, 100))
+                    elif (global_heuristic == 6):
+                        image = pygame.image.load(r'.\assets\hikaru.png')
+                        WIN.blit(image, (550, 100))
                 if global_method == 1:
-                    if game.turn == 2:
-                        value, new_board, res = ai.minimax(game.board, global_heuristic, 2, float('-inf'), float('+inf'), 0)
-                        eval1 = new_board.evaluationPlayer(1)
-                        eval2 = new_board.evaluationPlayer(2)
-                        updateBars(eval1, eval2)
-                        game.board = new_board
-                        game.update()
-                        winner = game.board.checkWin()
-                        if (winner > 0): 
-                            display_message(str(winner)) 
-                            run = False
-                        game.turn = 1
-                    else:
-                        if event.type == pygame.MOUSEBUTTONDOWN:
-                            pos = pygame.mouse.get_pos()
-                            row, col = get_row_col_from_mouse(pos)
-                            movePlayed = game.select(row, col)
-                            if (movePlayed == 1):
-                                eval1 = game.board.evaluationPlayer(1)
-                                eval2 = game.board.evaluationPlayer(2)
-                                updateBars(eval1, eval2)
-                            game.update()
-                            winner = game.board.checkWin()
-                            if (winner > 0): 
-                                display_message(str(winner)) 
-                                run = False
+                    if method_1(game, ai, event, global_heuristic) == 1:
+                        run = False
                 elif global_method == 2:
-                    if game.turn == 2:
-                        value, new_board, res = ai.minimax_ab(game.board, global_heuristic, 2, float('-inf'), float('+inf'), 0)
-                        eval1 = new_board.evaluationPlayer(1)
-                        eval2 = new_board.evaluationPlayer(2)
-                        updateBars(eval1, eval2)
-                        game.board = new_board
-                        game.update()
-                        winner = game.board.checkWin()
-                        if (winner > 0): 
-                            display_message(str(winner)) 
-                            run = False
-                        game.turn = 1
-                    else:
-                        if event.type == pygame.MOUSEBUTTONDOWN:
-                            pos = pygame.mouse.get_pos()
-                            row, col = get_row_col_from_mouse(pos)
-                            movePlayed = game.select(row, col)
-                            if (movePlayed == 1):
-                                eval1 = game.board.evaluationPlayer(1)
-                                eval2 = game.board.evaluationPlayer(2)
-                                updateBars(eval1, eval2)
-                            game.update()
-                            winner = game.board.checkWin()
-                            if (winner > 0): 
-                                display_message(str(winner)) 
-                                run = False
+                    if method_2(game, ai, event, global_heuristic) == 1:
+                        run = False
             elif global_mode == "cvc":
                 if game.turn == 1:
                     value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
                     time.sleep(1)
                     eval1 = new_board.evaluationPlayer(1)
                     eval2 = new_board.evaluationPlayer(2)
-                    updateBars(eval1, eval2)
+                    updateBars(WIN, eval1, eval2)
                     game.board = new_board
                     game.update()
                     winner = game.board.checkWin()
                     if (winner > 0): 
                         time.sleep(1)
-                        display_message(str(winner)) 
+                        display_message(WIN, str(winner)) 
                         run = False
                     game.turn = 2
                 elif game.turn == 2:
@@ -187,13 +86,13 @@ def start():
                     time.sleep(1)
                     eval1 = new_board.evaluationPlayer(1)
                     eval2 = new_board.evaluationPlayer(2)
-                    updateBars(eval1, eval2)
+                    updateBars(WIN, eval1, eval2)
                     game.board = new_board
                     game.update()
                     winner = game.board.checkWin()
                     if (winner > 0): 
                         time.sleep(1)
-                        display_message(str(winner)) 
+                        display_message(WIN, str(winner)) 
                         run = False
                     game.turn = 1
 
@@ -202,6 +101,7 @@ def start():
 
 
 def start_the_game():
+    WIN.fill((189,233,206), rect=None, special_flags=0)
     start()
 
 def set_mode(value, mode):
