@@ -17,7 +17,7 @@ pygame.display.set_caption('Neutreeko')
 END_FONT = pygame.font.Font('freesansbold.ttf', 32)
 talkFont = pygame.font.Font('freesansbold.ttf', 15)
 nameFont = pygame.font.Font('freesansbold.ttf', 25)
-global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2, global_moves
+global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2
 global_mode = "pvp"
 global_heuristic = 2
 global_method = 1
@@ -25,7 +25,6 @@ global_pc1 = 1
 global_pc2 = 1
 global_name1 = ['Default1',1]
 global_name2 = ['Default2',1]
-global_moves = []
 
 xqcLines = ["Hikaru taught me this is the best move!", "BING!", "BANG!", "Chat, CHAT! I totally planned that.", "DUDE DUDE DUDE DUDE DUDE", "Jam a man of Fortune...", "Cheeto!", "...and J must seek my fortune!"]
 botezLines = ["Let the games begin!"]
@@ -58,6 +57,13 @@ def display_message(WIN, winner):
         pygame.display.update()
         global_name1[0] = "Default1"
         global_name2[0] = "Default2"
+        time.sleep(1)
+
+    elif winner == "0":
+        pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
+        end_text = END_FONT.render("It was a Draw!", 1, BLACK)
+        WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
+        pygame.display.update()
         time.sleep(1)
         
 

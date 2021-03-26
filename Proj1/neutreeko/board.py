@@ -13,6 +13,7 @@ class Board:
         self.player1Pieces = []
         self.player2Pieces = []
         self.create_board()
+        self.boards={'0202000100000000020001010':1}
 
     def draw_squares(self, win):
         for row in range(ROWS):
@@ -51,6 +52,21 @@ class Board:
     def getPiece(self, row, col):
         return self.board[row][col]
     
+    def board_as_string(self):
+        result = ""
+        for i in range(5):
+            for j in range(5):
+                if(self.board[i][j] == 0):
+                        result += "0"
+                elif (isinstance(self.board[i][j],Piece)):
+                    if(self.board[i][j].color == (255,255,255)):
+                        result += "2"
+                    elif(self.board[i][j].color == (61,61,61)):
+                        result += "1" 
+                else:
+                    result += "0"
+        return result
+
     def move(self, startX, startY, endX, endY, color, player):
         self.board[startX][startY] = 0
         self.board[endX][endY] = Piece(endX, endY, color)
@@ -444,11 +460,12 @@ class Board:
     def checkWin(self):
         player1Pieces = self.getPiecesCoordinates(1)
         player2Pieces = self.getPiecesCoordinates(2)
-
         if (self.checkPieces(player1Pieces)):
             return 1
         elif (self.checkPieces(player2Pieces)):
             return 2
-    
+        elif (self.boards[self.board_as_string()] == 3):
+            return 0   
+
         return -1
-    
+

@@ -2,7 +2,6 @@ import pygame
 from pygame import gfxdraw
 import pygame_menu
 pygame.init()
-
 from neutreeko.constants import *
 from neutreeko.game import Game
 from minimax.algorithm import AI
@@ -43,9 +42,13 @@ def start():
                         eval1 = game.board.evaluationPlayer(1)
                         eval2 = game.board.evaluationPlayer(2)
                         updateBars(WIN, eval1, eval2)
+                        if game.board.board_as_string() in game.board.boards.keys():
+                            game.board.boards[game.board.board_as_string()] += 1
+                        else:
+                            game.board.boards.update({game.board.board_as_string() : 1})
                     game.update()
                     winner = game.board.checkWin()
-                    if (winner > 0): 
+                    if (winner >= 0): 
                         display_message(WIN, str(winner)) 
                         time.sleep(1)
                         run = False
