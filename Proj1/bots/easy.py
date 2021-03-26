@@ -25,6 +25,10 @@ def method_1(game, ai, event, diff):
             return 1
         drawLine(WIN, diff)
         game.turn = 1
+        if game.board.board_as_string() in game.board.boards.keys():
+            game.board.boards[game.board.board_as_string()] += 1
+        else:
+            game.board.boards.update({game.board.board_as_string() : 1})
     else:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
@@ -40,7 +44,11 @@ def method_1(game, ai, event, diff):
                 drawEnding(winner, diff, WIN)
                 display_message(WIN, str(winner)) 
                 return 1
-
+        if game.board.board_as_string() in game.board.boards.keys():
+            game.board.boards[game.board.board_as_string()] += 1
+        else:
+            game.board.boards.update({game.board.board_as_string() : 1})
+    
 # With Cuts
 def method_2(game, ai, event, diff):
     if game.turn == 2:
@@ -57,6 +65,10 @@ def method_2(game, ai, event, diff):
             return 1
         drawLine(WIN, diff)
         game.turn = 1
+        if game.board.board_as_string() in game.board.boards.keys():
+            game.board.boards[game.board.board_as_string()] += 1
+        else:
+            game.board.boards.update({game.board.board_as_string() : 1})
     else:
         if event.type == pygame.KEYDOWN:
             if event.unicode == 'h':
@@ -87,3 +99,7 @@ def method_2(game, ai, event, diff):
                 drawEnding(winner, diff, WIN)
                 display_message(WIN, str(winner)) 
                 return 1
+        if game.board.board_as_string() in game.board.boards.keys():
+            game.board.boards[game.board.board_as_string()] += 1
+        else:
+            game.board.boards.update({game.board.board_as_string() : 1})

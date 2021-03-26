@@ -2,7 +2,6 @@ import pygame
 from pygame import gfxdraw
 import pygame_menu
 pygame.init()
-
 from neutreeko.constants import *
 from neutreeko.game import Game
 from minimax.algorithm import AI
@@ -24,21 +23,74 @@ def start():
         clock.tick(FPS)
         pygame.display.update()
 
-        if global_mode == "cvc":
-            game.update()
-            pygame.display.update()
-            global_name1[0] = 'AI_1'
-            global_name2[0] = 'AI_2'
-            if game.turn == 1:
-                value, new_board = ai.minimax_ab(game.board, global_pc1, 1, float('-inf'), float('+inf'))
-                time.sleep(1)
-                eval1 = new_board.evaluationPlayer(1)
-                eval2 = new_board.evaluationPlayer(2)
-                updateBars(WIN, eval1, eval2)
-                game.board = new_board
-                game.update()
-                winner = game.board.checkWin()
-                if (winner > 0): 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif global_mode == "pvp":
+                image = pygame.image.load(r'.\assets\defaultplayer.png')
+                player1 = nameFont.render(global_name1[0], True, (0,0,0))
+                player2 = nameFont.render(global_name2[0], True, (0,0,0))
+                WIN.blit(player2, (270, 180))
+                WIN.blit(player1, (270, 730))
+                WIN.blit(image, (180,120))
+                WIN.blit(image, (180,670))
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    row, col = get_row_col_from_mouse(pos)
+                    movePlayed = game.select(row, col)
+                    if (movePlayed == 1):
+                        eval1 = game.board.evaluationPlayer(1)
+                        eval2 = game.board.evaluationPlayer(2)
+                        updateBars(WIN, eval1, eval2)
+                        if game.board.board_as_string() in game.board.boards.keys():
+                            game.board.boards[game.board.board_as_string()] += 1
+                        else:
+                            game.board.boards.update({game.board.board_as_string() : 1})
+                    game.update()
+                    winner = game.board.checkWin()
+                    if (winner >= 0): 
+                        display_message(WIN, str(winner)) 
+                        time.sleep(1)
+                        run = False
+            elif global_mode == "pvc":
+                image = pygame.image.load(r'.\assets\lamp.png')
+                image1 = pygame.image.load(r'.\assets\defaultplayer.png')
+                player1 = nameFont.render(global_name1[0], True, (0,0,0))
+                WIN.blit(player1, (270, 730))
+                WIN.blit(image1, (180,670))
+                WIN.blit(image, (20,350))
+                if botStarted is False:
+                    drawCards(WIN)
+                    hint = END_FONT.render('Press H ', True, (0,0,0))
+                    hint1 = END_FONT.render('for a Hint', True, (0,0,0))
+                    drawWelcome(WIN, global_heuristic)
+                    drawName(WIN, global_heuristic)
+                    botStarted = True
+                    WIN.blit(hint, (30, 450))
+                    WIN.blit(hint1, (20, 480))
+                    if (global_heuristic == 2):
+                        global_name2[0] = "XQC"
+                        image = pygame.image.load(r'.\assets\xqc.png')
+                        WIN.blit(image, (550, 100))
+                    elif (global_heuristic == 4):
+                        global_name2[0] = "Botez"
+                        image = pygame.image.load(r'.\assets\botez.png')
+                        WIN.blit(image, (550, 100))
+                    elif (global_heuristic == 6):
+                        global_name2[0] = "Hikaru"
+                        image = pygame.image.load(r'.\assets\hikaru.png')
+                        WIN.blit(image, (550, 100))
+                if global_method == 1:
+                    if method_1(game, ai, event, global_heuristic) == 1:
+                        run = False
+                elif global_method == 2:
+                    if method_2(game, ai, event, global_heuristic) == 1:
+                        run = False
+            elif global_mode == "cvc":
+                global_name1[0] = 'AI_1'
+                global_name2[0] = 'AI_2'
+                if game.turn == 1:
+                    value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
                     time.sleep(1)
                     display_message(WIN, str(winner)) 
                     run = False
