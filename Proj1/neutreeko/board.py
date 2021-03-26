@@ -433,8 +433,8 @@ class Board:
         #eval = eval - self.check2inARow(player2Pieces)
 
         #Verificar pecas adjacentes
-        eval = eval + self.checkSurrounding(player1Pieces)
-        eval = eval - self.checkSurrounding(player2Pieces)
+        #eval = eval + self.checkSurrounding(player1Pieces)
+        #eval = eval - self.checkSurrounding(player2Pieces)
 
         return eval
 

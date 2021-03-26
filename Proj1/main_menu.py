@@ -68,7 +68,7 @@ def start():
                         run = False
             elif global_mode == "cvc":
                 if game.turn == 1:
-                    value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
+                    value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'))
                     time.sleep(1)
                     eval1 = new_board.evaluationPlayer(1)
                     eval2 = new_board.evaluationPlayer(2)

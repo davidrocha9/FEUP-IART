@@ -23,7 +23,7 @@ global_pc1 = 1
 global_pc2 = 1
 
 xqcLines = ["Hikaru taught me this is the best move!", "BING!", "BANG!", "Chat, CHAT! I totally planned that.", "DUDE DUDE DUDE DUDE DUDE", "Jam a man of Fortune...", "Cheeto!", "...and J must seek my fortune!"]
-botezLines = ["Let the games begin!"]
+botezLines = ["Let the games begin!", "I wonder if there is a London for Neutreeko...", "I guess that is playable.", "I was already expecting that.", "Bang. You're making it too easy.", "*changes Spotify playlist*"]
 hikaruLines = ["This is all theory.", "*looks at ceiling and scratches head*", "Takes, takes and takes... I think this is winning.", "Is this a move? Probably. Let's play it.", "Let's keep going.", "Chat, this has to be winning!", "I'll just play my juicer here.", "If takes I just take, and then I must be winning.", "I go here, here, here and here and I win."]
 
 def get_row_col_from_mouse(pos):
@@ -68,11 +68,10 @@ def drawName(WIN, diff):
 def drawWelcome(WIN, diff):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
-    print(diff)
     if diff == 2:
         hint = talkFont.render("BING. BANG. BOOM. Let’s do this!", True, (0,0,0))
     elif diff == 4:
-        hint = talkFont.render("I have some time before my stream... good luck :)", True, (0,0,0))
+        hint = talkFont.render("I have time before my stream... good luck :)", True, (0,0,0))
     elif diff == 6:
         hint = talkFont.render("Let's see what you have prepared for me.", True, (0,0,0))
     WIN.blit(hint, (175, 130))
@@ -80,10 +79,16 @@ def drawWelcome(WIN, diff):
 def drawLine(WIN, diff):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
-    if (diff == 1):
+    if (diff == 2):
         x = random.randint(0,len(xqcLines)-1)
-        hint = talkFont.render(xqcLines[x], True, (0,0,0))
-    WIN.blit(hint, (175, 130))
+        speach = talkFont.render(xqcLines[x], True, (0,0,0))
+    elif (diff == 4):
+        x = random.randint(0,len(botezLines)-1)
+        speach = talkFont.render(botezLines[x], True, (0,0,0))
+    elif (diff == 6):
+        x = random.randint(0,len(hikaruLines)-1)
+        speach = talkFont.render(hikaruLines[x], True, (0,0,0))
+    WIN.blit(speach, (175, 130))
 
 def drawEnding(player, diff, WIN):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
@@ -92,13 +97,13 @@ def drawEnding(player, diff, WIN):
         if player == 2:
             hint = talkFont.render("GG EZ CLAP GET REKT", True, (0,0,0))
         else:
-            hint = talkFont.render("NOOOOOOOOOOO! GO AGANE *slams desk*", True, (0,0,0))
+            hint = talkFont.render("NOOOOO! GO AGANE *slams desk*", True, (0,0,0))
     elif diff == 4:
         if player == 2:
-            hint = talkFont.render("That was a fun game!", True, (0,0,0))
+            hint = talkFont.render("I kinda wished this would be over sooner.", True, (0,0,0))
         else:
             hint = talkFont.render("That loss was chat's fault.", True, (0,0,0))
-    else:
+    elif diff == 6:
         if player == 2:
             hint = talkFont.render("That was good, but not good enough for Magnus.", True, (0,0,0))
         else:
