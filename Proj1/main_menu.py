@@ -3,7 +3,6 @@ from pygame import gfxdraw
 import pygame_menu
 pygame.init()
 
-import time
 from neutreeko.constants import *
 from neutreeko.game import Game
 from minimax.algorithm import AI
@@ -29,6 +28,13 @@ def start():
             if event.type == pygame.QUIT:
                 run = False
             elif global_mode == "pvp":
+                image = pygame.image.load(r'.\assets\defaultplayer.png')
+                player1 = nameFont.render(global_name1[0], True, (0,0,0))
+                player2 = nameFont.render(global_name2[0], True, (0,0,0))
+                WIN.blit(player2, (270, 180))
+                WIN.blit(player1, (270, 730))
+                WIN.blit(image, (180,120))
+                WIN.blit(image, (180,670))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     row, col = get_row_col_from_mouse(pos)
@@ -44,20 +50,31 @@ def start():
                         time.sleep(1)
                         run = False
             elif global_mode == "pvc":
+                image = pygame.image.load(r'.\assets\lamp.png')
+                image1 = pygame.image.load(r'.\assets\defaultplayer.png')
+                player1 = nameFont.render(global_name1[0], True, (0,0,0))
+                WIN.blit(player1, (270, 730))
+                WIN.blit(image1, (180,670))
+                WIN.blit(image, (20,350))
                 if botStarted is False:
                     drawCards(WIN)
-                    hint = END_FONT.render('Press H for a Hint', True, (0,0,0))
+                    hint = END_FONT.render('Press H ', True, (0,0,0))
+                    hint1 = END_FONT.render('for a Hint', True, (0,0,0))
                     drawWelcome(WIN, global_heuristic)
                     drawName(WIN, global_heuristic)
                     botStarted = True
-                    WIN.blit(hint, (265, 720))
+                    WIN.blit(hint, (30, 450))
+                    WIN.blit(hint1, (20, 480))
                     if (global_heuristic == 2):
+                        global_name2[0] = "XQC"
                         image = pygame.image.load(r'.\assets\xqc.png')
                         WIN.blit(image, (550, 100))
                     elif (global_heuristic == 4):
+                        global_name2[0] = "Botez"
                         image = pygame.image.load(r'.\assets\botez.png')
                         WIN.blit(image, (550, 100))
                     elif (global_heuristic == 6):
+                        global_name2[0] = "Hikaru"
                         image = pygame.image.load(r'.\assets\hikaru.png')
                         WIN.blit(image, (550, 100))
                 if global_method == 1:
@@ -67,6 +84,8 @@ def start():
                     if method_2(game, ai, event, global_heuristic) == 1:
                         run = False
             elif global_mode == "cvc":
+                global_name1[0] = 'AI_1'
+                global_name2[0] = 'AI_2'
                 if game.turn == 1:
                     value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
                     time.sleep(1)
@@ -95,13 +114,14 @@ def start():
                         display_message(WIN, str(winner)) 
                         run = False
                     game.turn = 1
-
         game.update()
         pygame.display.update()
 
 
 def start_the_game():
-    WIN.fill((189,233,206), rect=None, special_flags=0)
+    image = pygame.image.load(r'.\assets\back.jpg')
+    WIN.blit(image, (0,0))
+    #WIN.fill((189,233,206), rect=None, special_flags=0)
     start()
 
 def set_mode(value, mode):
@@ -110,31 +130,44 @@ def set_mode(value, mode):
 
     if mode == 1 and global_mode == "pvc":
         global_mode = "pvp"
+        menu.remove_widget(nome1)
         menu.remove_widget(select_method)
-        menu.remove_widget(select_heuristic) 
+        menu.remove_widget(select_heuristic)
+        menu.add_generic_widget(nome1)
+        menu.add_generic_widget(nome2)
 
     elif mode == 1 and global_mode == "cvc":
         global_mode = "pvp"
         menu.remove_widget(select_difficulty_pc1)
-        menu.remove_widget(select_difficulty_pc2) 
+        menu.remove_widget(select_difficulty_pc2)
+        menu.add_generic_widget(nome1)
+        menu.add_generic_widget(nome2) 
 
     elif mode == 2 and global_mode == "pvp":
         global_mode = "pvc"
+        menu.remove_widget(nome1)
+        menu.remove_widget(nome2)
+        menu.add_generic_widget(nome1)
         menu.add_generic_widget(select_method)
         menu.add_generic_widget(select_heuristic)
+
     elif mode == 2 and global_mode == "cvc":
         global_mode = "pvc"
         menu.remove_widget(select_difficulty_pc1)
         menu.remove_widget(select_difficulty_pc2)
+        menu.add_generic_widget(nome1)
         menu.add_generic_widget(select_method)
         menu.add_generic_widget(select_heuristic)
 
     elif mode == 3 and global_mode == "pvp":
         global_mode = "cvc"
+        menu.remove_widget(nome1)
+        menu.remove_widget(nome2)
         menu.add_generic_widget(select_difficulty_pc1)
         menu.add_generic_widget(select_difficulty_pc2)
     elif mode == 3 and global_mode == "pvc":
         global_mode = "cvc"
+        menu.remove_widget(nome1)
         menu.remove_widget(select_method)
         menu.remove_widget(select_heuristic) 
         menu.add_generic_widget(select_difficulty_pc1)
@@ -142,7 +175,14 @@ def set_mode(value, mode):
 
     menu.add_generic_widget(quit) 
     
-    
+def set_name1(name1):
+    global global_name1
+    global_name1[0] = name1
+
+def set_name2(name2):
+    global global_name2
+    global_name2[0] = name2
+
 
 def set_method(value, method):
     global global_method
@@ -170,7 +210,7 @@ def set_difficulty_pc2(value, difficult2):
 
 mytheme = pygame_menu.themes.THEME_DARK.copy()
 
-myimage = pygame_menu.baseimage.BaseImage(image_path='src/back.jpg', drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
+myimage = pygame_menu.baseimage.BaseImage(image_path='assets/back.jpg', drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
 mytheme.background_color = myimage
 mytheme.widget_font_color = (255,255,255)
 mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_ADAPTIVE
@@ -181,6 +221,8 @@ menu = pygame_menu.Menu(WIDTH, HEIGHT, 'Neutreeko', theme=mytheme)
 
 menu.add.button('Play', start_the_game)
 menu.add.selector('Mode :', [('Player v Player', 1), ('Player v AI', 2), ('AI v AI', 3)], onchange=set_mode)
+nome1 = menu.add.text_input('Player1 :', default='Default', onchange=(set_name1))
+nome2 = menu.add.text_input('Player2 :', default='Default', onchange=(set_name2))
 select_method = menu.add.selector('Search Method :', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2)], onchange=set_method)
 select_heuristic = menu.add.selector('Heuristic :', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_heuristic)
 select_difficulty_pc1 = menu.add.selector('Pc1 difficulty :', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_difficulty_pc1)

@@ -8,6 +8,7 @@ from minimax.algorithm import AI
 import time
 import random
 from bots.easy import *
+from collections import Counter
 
 FPS = 60
 
@@ -15,12 +16,16 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Neutreeko')
 END_FONT = pygame.font.Font('freesansbold.ttf', 32)
 talkFont = pygame.font.Font('freesansbold.ttf', 15)
-global global_mode, global_heuristic, global_method, global_pc1, global_pc2
+nameFont = pygame.font.Font('freesansbold.ttf', 25)
+global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2, global_moves
 global_mode = "pvp"
 global_heuristic = 2
 global_method = 1
 global_pc1 = 1
 global_pc2 = 1
+global_name1 = ['Default1',1]
+global_name2 = ['Default2',1]
+global_moves = []
 
 xqcLines = ["Hikaru taught me this is the best move!", "BING!", "BANG!", "Chat, CHAT! I totally planned that.", "DUDE DUDE DUDE DUDE DUDE", "Jam a man of Fortune...", "Cheeto!", "...and J must seek my fortune!"]
 botezLines = ["Let the games begin!"]
@@ -34,12 +39,28 @@ def get_row_col_from_mouse(pos):
     col = x // SQUARE_SIZE
     return row, col
 
+
+# To do colocar estatisticas
 def display_message(WIN, winner):
-    pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
-    end_text = END_FONT.render("Player " + winner + " won!", 1, BLACK)
-    WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
-    pygame.display.update()
-    time.sleep(3)
+    if winner == "1":
+        pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
+        end_text = END_FONT.render(str(global_name1[0]) + " won!", 1, BLACK)
+        WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
+        pygame.display.update()
+        global_name1[0] = "Default1"
+        global_name2[0] = "Default2"
+        time.sleep(1)
+        
+    elif winner == "2":
+        pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
+        end_text = END_FONT.render(str(global_name2[0]) + " won!", 1, BLACK)
+        WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
+        pygame.display.update()
+        global_name1[0] = "Default1"
+        global_name2[0] = "Default2"
+        time.sleep(1)
+        
+
 
 def drawCards(WIN):
     #WIN.fill(PURPLE)
@@ -68,7 +89,6 @@ def drawName(WIN, diff):
 def drawWelcome(WIN, diff):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
-    print(diff)
     if diff == 2:
         hint = talkFont.render("BING. BANG. BOOM. Let’s do this!", True, (0,0,0))
     elif diff == 4:
@@ -105,4 +125,3 @@ def drawEnding(player, diff, WIN):
             hint = talkFont.render("How did I not see that? I'm so bad.", True, (0,0,0))
     WIN.blit(hint, (175, 130))
 
-    
