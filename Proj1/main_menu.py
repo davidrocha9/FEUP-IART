@@ -18,102 +18,108 @@ def start():
     whiteBarY = 160
     blackBarY = 360
     botStarted = False
-
+    hintCounter = 0
 
     while run:
         clock.tick(FPS)
         pygame.display.update()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            elif global_mode == "pvp":
-                image = pygame.image.load(r'.\assets\defaultplayer.png')
-                player1 = nameFont.render(global_name1[0], True, (0,0,0))
-                player2 = nameFont.render(global_name2[0], True, (0,0,0))
-                WIN.blit(player2, (270, 180))
-                WIN.blit(player1, (270, 730))
-                WIN.blit(image, (180,120))
-                WIN.blit(image, (180,670))
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    pos = pygame.mouse.get_pos()
-                    row, col = get_row_col_from_mouse(pos)
-                    movePlayed = game.select(row, col)
-                    if (movePlayed == 1):
-                        eval1 = game.board.evaluationPlayer(1)
-                        eval2 = game.board.evaluationPlayer(2)
-                        updateBars(WIN, eval1, eval2)
-                    game.update()
-                    winner = game.board.checkWin()
-                    if (winner > 0): 
-                        display_message(WIN, str(winner)) 
-                        time.sleep(1)
-                        run = False
-            elif global_mode == "pvc":
-                image = pygame.image.load(r'.\assets\lamp.png')
-                image1 = pygame.image.load(r'.\assets\defaultplayer.png')
-                player1 = nameFont.render(global_name1[0], True, (0,0,0))
-                WIN.blit(player1, (270, 730))
-                WIN.blit(image1, (180,670))
-                WIN.blit(image, (20,350))
-                if botStarted is False:
-                    drawCards(WIN)
-                    hint = END_FONT.render('Press H ', True, (0,0,0))
-                    hint1 = END_FONT.render('for a Hint', True, (0,0,0))
-                    drawWelcome(WIN, global_heuristic)
-                    drawName(WIN, global_heuristic)
-                    botStarted = True
-                    WIN.blit(hint, (30, 450))
-                    WIN.blit(hint1, (20, 480))
-                    if (global_heuristic == 2):
-                        global_name2[0] = "XQC"
-                        image = pygame.image.load(r'.\assets\xqc.png')
-                        WIN.blit(image, (550, 100))
-                    elif (global_heuristic == 4):
-                        global_name2[0] = "Botez"
-                        image = pygame.image.load(r'.\assets\botez.png')
-                        WIN.blit(image, (550, 100))
-                    elif (global_heuristic == 6):
-                        global_name2[0] = "Hikaru"
-                        image = pygame.image.load(r'.\assets\hikaru.png')
-                        WIN.blit(image, (550, 100))
-                if global_method == 1:
-                    if method_1(game, ai, event, global_heuristic) == 1:
-                        run = False
-                elif global_method == 2:
-                    if method_2(game, ai, event, global_heuristic) == 1:
-                        run = False
-            elif global_mode == "cvc":
-                global_name1[0] = 'AI_1'
-                global_name2[0] = 'AI_2'
-                if game.turn == 1:
-                    value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'))
+        if global_mode == "cvc":
+            game.update()
+            pygame.display.update()
+            global_name1[0] = 'AI_1'
+            global_name2[0] = 'AI_2'
+            if game.turn == 1:
+                value, new_board = ai.minimax_ab(game.board, global_pc1, 1, float('-inf'), float('+inf'))
+                time.sleep(1)
+                eval1 = new_board.evaluationPlayer(1)
+                eval2 = new_board.evaluationPlayer(2)
+                updateBars(WIN, eval1, eval2)
+                game.board = new_board
+                game.update()
+                winner = game.board.checkWin()
+                if (winner > 0): 
                     time.sleep(1)
-                    eval1 = new_board.evaluationPlayer(1)
-                    eval2 = new_board.evaluationPlayer(2)
-                    updateBars(WIN, eval1, eval2)
-                    game.board = new_board
-                    game.update()
-                    winner = game.board.checkWin()
-                    if (winner > 0): 
-                        time.sleep(1)
-                        display_message(WIN, str(winner)) 
-                        run = False
-                    game.turn = 2
-                elif game.turn == 2:
-                    value, new_board, res = ai.minimax_ab(game.board, global_pc1, 2, float('-inf'), float('+inf'), 0)
+                    display_message(WIN, str(winner)) 
+                    run = False
+                game.turn = 2
+            elif game.turn == 2:
+                value, new_board = ai.minimax_ab(game.board, global_pc2, 2, float('-inf'), float('+inf'))
+                time.sleep(1)
+                eval1 = new_board.evaluationPlayer(1)
+                eval2 = new_board.evaluationPlayer(2)
+                updateBars(WIN, eval1, eval2)
+                game.board = new_board
+                game.update()
+                winner = game.board.checkWin()
+                if (winner > 0): 
                     time.sleep(1)
-                    eval1 = new_board.evaluationPlayer(1)
-                    eval2 = new_board.evaluationPlayer(2)
-                    updateBars(WIN, eval1, eval2)
-                    game.board = new_board
-                    game.update()
-                    winner = game.board.checkWin()
-                    if (winner > 0): 
-                        time.sleep(1)
-                        display_message(WIN, str(winner)) 
-                        run = False
-                    game.turn = 1
+                    display_message(WIN, str(winner)) 
+                    run = False
+                game.turn = 1
+        else:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                elif global_mode == "pvp":
+                    image = pygame.image.load(r'.\assets\defaultplayer.png')
+                    player1 = nameFont.render(global_name1[0], True, (0,0,0))
+                    player2 = nameFont.render(global_name2[0], True, (0,0,0))
+                    WIN.blit(player2, (270, 180))
+                    WIN.blit(player1, (270, 730))
+                    WIN.blit(image, (180,120))
+                    WIN.blit(image, (180,670))
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        pos = pygame.mouse.get_pos()
+                        row, col = get_row_col_from_mouse(pos)
+                        movePlayed = game.select(row, col)
+                        if (movePlayed == 1):
+                            eval1 = game.board.evaluationPlayer(1)
+                            eval2 = game.board.evaluationPlayer(2)
+                            updateBars(WIN, eval1, eval2)
+                        game.update()
+                        winner = game.board.checkWin()
+                        if (winner > 0): 
+                            display_message(WIN, str(winner)) 
+                            time.sleep(1)
+                            run = False
+                elif global_mode == "pvc":
+                    image = pygame.image.load(r'.\assets\lamp.png')
+                    image1 = pygame.image.load(r'.\assets\defaultplayer.png')
+                    player1 = nameFont.render(global_name1[0], True, (0,0,0))
+                    WIN.blit(player1, (270, 730))
+                    WIN.blit(image1, (180,670))
+                    WIN.blit(image, (20,350))
+                    if botStarted is False:
+                        drawCards(WIN)
+                        hint = END_FONT.render('Press H ', True, (0,0,0))
+                        hint1 = END_FONT.render('for a Hint', True, (0,0,0))
+                        WIN.blit(hint, (30, 450))
+                        WIN.blit(hint1, (20, 480))
+                        drawWelcome(WIN, global_heuristic)
+                        drawName(WIN, global_heuristic)
+                        botStarted = True
+                        if (global_heuristic == 2):
+                            global_name2[0] = "XQC"
+                            image = pygame.image.load(r'.\assets\xqc.png')
+                            WIN.blit(image, (550, 100))
+                        elif (global_heuristic == 4):
+                            global_name2[0] = "Andrea"
+                            image = pygame.image.load(r'.\assets\botez.png')
+                            WIN.blit(image, (550, 100))
+                        elif (global_heuristic == 6):
+                            global_name2[0] = "Hikaru"
+                            image = pygame.image.load(r'.\assets\hikaru.png')
+                            WIN.blit(image, (550, 100))
+                    '''counter = hintFont.render('Counter: ' + str(hintCounter), True, (0,0,0))
+                    WIN.blit(counter, (30, 525))
+                    hintCounter += 1'''
+                    if global_method == 1:
+                        if method_1(game, ai, event, global_heuristic) == 1:
+                            run = False
+                    elif global_method == 2:
+                        if method_2(game, ai, event, global_heuristic) == 1:
+                            run = False
         game.update()
         pygame.display.update()
 
@@ -198,11 +204,11 @@ def set_heuristic(value, heuristic):
 
 def set_difficulty_pc1(value, difficulty1):
     global global_pc1
-    if difficulty1 == 1: global_pc1 = 2
+    if difficulty1 == 1: global_pc1 = 1
     elif difficulty1 == 2: global_pc1 = 3
-    elif difficulty1 == 3: global_pc1 = 4
+    elif difficulty1 == 3: global_pc1 = 5
 
-def set_difficulty_pc2(value, difficult2):
+def set_difficulty_pc2(value, difficulty2):
     global global_pc2
     if difficulty2 == 1: global_pc2 = 2
     elif difficulty2 == 2: global_pc2 = 3
@@ -220,20 +226,18 @@ mytheme.widget_margin = (0,20)
 menu = pygame_menu.Menu(WIDTH, HEIGHT, 'Neutreeko', theme=mytheme)
 
 menu.add.button('Play', start_the_game)
-menu.add.selector('Mode :', [('Player v Player', 1), ('Player v AI', 2), ('AI v AI', 3)], onchange=set_mode)
-nome1 = menu.add.text_input('Player1 :', default='Default', onchange=(set_name1))
-nome2 = menu.add.text_input('Player2 :', default='Default', onchange=(set_name2))
-select_method = menu.add.selector('Search Method :', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2)], onchange=set_method)
-select_heuristic = menu.add.selector('Heuristic :', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_heuristic)
-select_difficulty_pc1 = menu.add.selector('Pc1 difficulty :', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_difficulty_pc1)
-select_difficulty_pc2 = menu.add.selector('Pc2 difficulty :', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_difficulty_pc2)
+menu.add.selector('Mode: ', [('Player v Player', 1), ('Player v AI', 2), ('AI v AI', 3)], onchange=set_mode)
+nome1 = menu.add.text_input('Player1: ', default='Default', onchange=(set_name1))
+nome2 = menu.add.text_input('Player2: ', default='Default', onchange=(set_name2))
+select_method = menu.add.selector('Search Method: ', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2)], onchange=set_method)
+select_heuristic = menu.add.selector('Heuristic: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_heuristic)
+select_difficulty_pc1 = menu.add.selector('Pc1 difficulty: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_difficulty_pc1)
+select_difficulty_pc2 = menu.add.selector('Pc2 difficulty: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_difficulty_pc2)
 quit = menu.add.button('Quit', pygame_menu.events.EXIT)
 menu.remove_widget(select_method)
 menu.remove_widget(select_heuristic)
 menu.remove_widget(select_difficulty_pc1)
 menu.remove_widget(select_difficulty_pc2)
-
-
 
 
 def main():
