@@ -15,6 +15,7 @@ FPS = 60
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Neutreeko')
 END_FONT = pygame.font.Font('freesansbold.ttf', 32)
+hintFont = pygame.font.Font('freesansbold.ttf', 25)
 talkFont = pygame.font.Font('freesansbold.ttf', 15)
 nameFont = pygame.font.Font('freesansbold.ttf', 25)
 global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2, global_moves
@@ -42,23 +43,24 @@ def get_row_col_from_mouse(pos):
 
 # To do colocar estatisticas
 def display_message(WIN, winner):
+    rect = pygame.draw.rect(WIN, CARDCOLOR, (150, 250, 500, 300), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     if winner == "1":
-        pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
+        #pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
         end_text = END_FONT.render(str(global_name1[0]) + " won!", 1, BLACK)
         WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
         pygame.display.update()
         global_name1[0] = "Default1"
         global_name2[0] = "Default2"
-        time.sleep(1)
+        time.sleep(3)
         
     elif winner == "2":
-        pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
+        #pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
         end_text = END_FONT.render(str(global_name2[0]) + " won!", 1, BLACK)
         WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
         pygame.display.update()
         global_name1[0] = "Default1"
         global_name2[0] = "Default2"
-        time.sleep(1)
+        time.sleep(3)
         
 
 

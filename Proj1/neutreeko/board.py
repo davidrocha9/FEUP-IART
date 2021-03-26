@@ -429,14 +429,15 @@ class Board:
             eval -= 5000
 
         #Verificar 2 em linha
-        #eval = eval + self.check2inARow(player1Pieces)
-        #eval = eval - self.check2inARow(player2Pieces)
+        if (eval == 0):
+            eval = eval + self.check2inARow(player1Pieces)
+            eval = eval - self.check2inARow(player2Pieces)
 
         #Verificar pecas adjacentes
         #eval = eval + self.checkSurrounding(player1Pieces)
         #eval = eval - self.checkSurrounding(player2Pieces)
 
-        return eval
+        return eval + random.randint(1,5)
 
     def checkPieces(self, list):          
         return self.check3inARow(list)
