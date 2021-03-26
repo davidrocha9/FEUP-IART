@@ -20,10 +20,10 @@ def method_1(game, ai, event, diff):
         game.update()
         winner = game.board.checkWin()
         if (winner > 0):
-            drawEnding(winner, 2, WIN)
+            drawEnding(winner, diff, WIN)
             display_message(WIN, str(winner))
             return 1
-        drawLine(WIN, 1)
+        drawLine(WIN, diff)
         game.turn = 1
     else:
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -37,7 +37,7 @@ def method_1(game, ai, event, diff):
             game.update()
             winner = game.board.checkWin()
             if (winner > 0): 
-                drawEnding(winner, 2, WIN)
+                drawEnding(winner, diff, WIN)
                 display_message(WIN, str(winner)) 
                 return 1
 
@@ -52,10 +52,10 @@ def method_2(game, ai, event, diff):
         game.update()
         winner = game.board.checkWin()
         if (winner > 0):
-            drawEnding(winner, 2, WIN)
+            drawEnding(winner, diff, WIN)
             display_message(WIN, str(winner))
             return 1
-        drawLine(WIN, 1)
+        drawLine(WIN, diff)
         game.turn = 1
     else:
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -69,6 +69,6 @@ def method_2(game, ai, event, diff):
             game.update()
             winner = game.board.checkWin()
             if (winner > 0): 
-                drawEnding(winner, 2, WIN)
+                drawEnding(winner, diff, WIN)
                 display_message(WIN, str(winner)) 
                 return 1

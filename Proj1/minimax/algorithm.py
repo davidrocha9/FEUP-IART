@@ -54,14 +54,13 @@ class AI:
             maxEval = float('-inf')
             best_move = None    
             for move in self.get_all_moves(position, 1):
-                result = self.minimax(move, depth - 1, 2, alpha, beta, nOpenings)
+                result = self.minimax_ab(move, depth - 1, 2, alpha, beta, nOpenings)
                 evaluation = result[0]
                 nOpenings += result[2]
                 if evaluation > maxEval:
                     maxEval = evaluation
                     best_move = move
                 if evaluation == maxEval and nOpenings > maxOpenings:
-                    print("melhor")
                     maxEval = evaluation
                     best_move = move
                     maxOpenings = nOpenings
@@ -77,7 +76,7 @@ class AI:
             minEval = float('+inf')
             best_move = None
             for move in self.get_all_moves(position, 2):
-                result = self.minimax(move, depth - 1, 1, alpha, beta, nOpenings)
+                result = self.minimax_ab(move, depth - 1, 1, alpha, beta, nOpenings)
                 evaluation = result[0]
                 nOpenings = result[2]
                 if evaluation < minEval:
@@ -116,4 +115,3 @@ class AI:
                 moves.append(new_board)
 
         return moves
-

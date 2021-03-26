@@ -87,7 +87,7 @@ def start():
                 global_name1[0] = 'AI_1'
                 global_name2[0] = 'AI_2'
                 if game.turn == 1:
-                    value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'), 0)
+                    value, new_board, res = ai.minimax_ab(game.board, global_pc2, 1, float('-inf'), float('+inf'))
                     time.sleep(1)
                     eval1 = new_board.evaluationPlayer(1)
                     eval2 = new_board.evaluationPlayer(2)
