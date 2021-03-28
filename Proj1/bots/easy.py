@@ -12,7 +12,8 @@ from utils import *
 # Without cuts
 def method_1(game, ai, event, diff):
     if game.turn == 2:
-        value, new_board = ai.minimax(game.board, diff, 2, float('-inf'), float('+inf'))
+        value, new_board = ai.minimax(game.board, 1, 2, float('-inf'), float('+inf'))
+        print(value)
         eval1 = new_board.evaluationPlayer(1)
         eval2 = new_board.evaluationPlayer(2)
         updateBars(WIN, eval1, eval2)

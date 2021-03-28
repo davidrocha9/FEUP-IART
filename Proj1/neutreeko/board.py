@@ -351,6 +351,36 @@ class Board:
             val = (list[i].y // SQUARE_SIZE) * 10 + (list[i].x // SQUARE_SIZE)
             pieces.append(val)
 
+        #Direita
+        for i in range(0,5):
+            if (pieces[0] + i == pieces[1]):
+                eval += 5
+            if (pieces[1] + i == pieces[2]):
+                eval += 5
+            if (pieces[0] + i == pieces[2]):
+                eval += 5
+        
+        '''#Baixo Direita
+        for i in range(0,50,11):
+            if (pieces[0] + i == pieces[1]):
+                eval += 5
+            if (pieces[0] + i == pieces[2]):
+                eval += 5
+
+        #Baixo
+        for i in range(0,50,10):
+            if (pieces[0] + i == pieces[1]):
+                eval += 5
+            if (pieces[0] + i == pieces[2]):
+                eval += 5
+        
+        #Baixo Esquerda
+        for i in range(0,50,9):
+            if (pieces[0] + i == pieces[1]):
+                eval += 5
+            if (pieces[0] + i == pieces[2]):
+                eval += 5'''
+
         return eval
                 
     def getPiecesCoordinates(self, player):
@@ -389,10 +419,8 @@ class Board:
             eval -= 5000
 
         #Verificar 2 em Linha (sem terem que estar adjacentes)
-        if (self.check2inLine(player1Pieces)):
-            eval += 100
-        if (self.check2inLine(player1Pieces)):
-            eval -= 100
+        eval += self.check2inLine(player1Pieces)
+        eval -= self.check2inLine(player2Pieces)
 
         return eval + random.randint(1,5)
 
