@@ -78,6 +78,7 @@ def simulate_move(piece, move, board, player):
         board.move(piece.row, piece.col, int(move[0]), int(move[1]), BLUE, 1)
     elif (player == 2):
         board.move(piece.row, piece.col, int(move[0]), int(move[1]), WHITE, 2)
+    #print(board.boards)
     return board
     
 

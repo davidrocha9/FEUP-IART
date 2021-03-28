@@ -13,7 +13,7 @@ class Board:
         self.player1Pieces = []
         self.player2Pieces = []
         self.create_board()
-        self.boards={'0202000100000000020001010':1}
+        self.boards={}
 
     def draw_squares(self, win):
         for row in range(ROWS):
@@ -344,27 +344,12 @@ class Board:
 
         return eval
 
-    def check2inline(self, list):
+    def check2inLine(self, list):
         pieces = []
         eval = 0
         for i in range(3):
             val = (list[i].y // SQUARE_SIZE) * 10 + (list[i].x // SQUARE_SIZE)
             pieces.append(val)
-
-        for i in range(3):
-            for x in range(i+1, 3):
-                #Direita
-                if (pieces[i] < pieces[x] and ((pieces[i] // 10) == (pieces[x] // 10))):
-                    eval += 100
-                #Direita Baixo
-                if (pieces[i] + 11 == pieces[x]):
-                    eval += 100
-                #Baixo
-                if (pieces[i] + 10 == pieces[x]):
-                    eval += 100
-                #Esquerda Baixo
-                if (pieces[i] + 9 == pieces[x]):
-                    eval += 100
 
         return eval
                 
@@ -382,44 +367,6 @@ class Board:
                         result.append(piece)
         return result
 
-    def checkSurrounding(self, pieces):
-        eval = 0
-        for piece in pieces:
-            #Cima
-            if (piece.row > 0):
-                if (self.board[piece.row-1][piece.col] != 0):
-                    eval += 1
-                #Cima Esquerda
-                if (piece.col > 0):
-                    if (self.board[piece.row-1][piece.col - 1] != 0):
-                        eval += 1
-                #Cima Direita
-                if (piece.col < 4):
-                    if (self.board[piece.row-1][piece.col + 1] != 0):
-                        eval += 1
-            #Baixo
-            if (piece.row < 4):
-                if (self.board[piece.row+1][piece.col] != 0):
-                    eval += 1
-                #Baixo Esquerda
-                if (piece.col > 0):
-                    if (self.board[piece.row + 1][piece.col - 1] != 0):
-                        eval += 1
-                #Baixo Direita
-                if (piece.col < 4):
-                    if (self.board[piece.row + 1][piece.col + 1] != 0):
-                        eval += 1
-            #Esquerda
-            if (piece.col > 0):
-                if (self.board[piece.row][piece.col-1] != 0):
-                    eval += 1
-            #Direita
-            if (piece.col < 4):
-                if (self.board[piece.row][piece.col+1] != 0):
-                    eval += 1
-        
-        return eval
-
     def evaluationPlayer(self, player):
         eval = 0
         playerPieces = self.getPiecesCoordinates(player)
@@ -427,9 +374,6 @@ class Board:
         #Verificar 3 em linha
         if (self.check3inARow(playerPieces)):
             eval += 5000
-
-        #Verificar pecas adjacentes
-        eval = eval + self.checkSurrounding(playerPieces)
 
         return eval
 
@@ -444,14 +388,11 @@ class Board:
         if (self.check3inARow(player2Pieces)):
             eval -= 5000
 
-        #Verificar 2 em linha
-        if (eval == 0):
-            eval = eval + self.check2inARow(player1Pieces)
-            eval = eval - self.check2inARow(player2Pieces)
-
-        #Verificar pecas adjacentes
-        #eval = eval + self.checkSurrounding(player1Pieces)
-        #eval = eval - self.checkSurrounding(player2Pieces)
+        #Verificar 2 em Linha (sem terem que estar adjacentes)
+        if (self.check2inLine(player1Pieces)):
+            eval += 100
+        if (self.check2inLine(player1Pieces)):
+            eval -= 100
 
         return eval + random.randint(1,5)
 
@@ -465,8 +406,14 @@ class Board:
             return 1
         elif (self.checkPieces(player2Pieces)):
             return 2
-        elif (self.boards[self.board_as_string()] == 3):
-            return 0   
 
+        if self.board_as_string() in self.boards.keys():
+            self.boards[self.board_as_string()] += 1
+        else:
+            self.boards.update({self.board_as_string() : 1})
+        
+        if (self.boards[self.board_as_string()] == 3):
+            return 0
+        
         return -1
 

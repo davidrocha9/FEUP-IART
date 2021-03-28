@@ -78,8 +78,8 @@ def drawCards(WIN):
 
 def updateBars(WIN, p1, p2):
     total = p1 + p2
-    p1Percentage = float(p1/total)
-    p2Percentage = float(p2/total)
+    p1Percentage = 0.5
+    p2Percentage = 0.5
     pygame.draw.rect(WIN, WHITE, (680, 220, 25, p2Percentage * 450)) #Barra branca
     pygame.draw.rect(WIN, BLUE, (680, 220 + p2Percentage * 450, 25, p1Percentage * 450)) #Barra preta
 
