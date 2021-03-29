@@ -344,6 +344,44 @@ class Board:
 
         return eval
 
+    def checkSurrounding(self, pieces):
+        eval = 0
+        for piece in pieces:
+            #Cima
+            if (piece.row > 0):
+                if (self.board[piece.row-1][piece.col] != 0):
+                    eval += 1
+                #Cima Esquerda
+                if (piece.col > 0):
+                    if (self.board[piece.row-1][piece.col - 1] != 0):
+                        eval += 1
+                #Cima Direita
+                if (piece.col < 4):
+                    if (self.board[piece.row-1][piece.col + 1] != 0):
+                        eval += 1
+            #Baixo
+            if (piece.row < 4):
+                if (self.board[piece.row+1][piece.col] != 0):
+                    eval += 1
+                #Baixo Esquerda
+                if (piece.col > 0):
+                    if (self.board[piece.row + 1][piece.col - 1] != 0):
+                        eval += 1
+                #Baixo Direita
+                if (piece.col < 4):
+                    if (self.board[piece.row + 1][piece.col + 1] != 0):
+                        eval += 1
+            #Esquerda
+            if (piece.col > 0):
+                if (self.board[piece.row][piece.col-1] != 0):
+                    eval += 1
+            #Direita
+            if (piece.col < 4):
+                if (self.board[piece.row][piece.col+1] != 0):
+                    eval += 1
+        
+        return eval
+
     def check2inLine(self, list):
         pieces = []
         eval = 0
@@ -355,13 +393,15 @@ class Board:
         for i in range(0,5):
             if (pieces[0] + i == pieces[1]):
                 eval += 5
-            if (pieces[1] + i == pieces[2]):
+            if (pieces[0] + i == pieces[1]):
                 eval += 5
             if (pieces[0] + i == pieces[2]):
                 eval += 5
         
-        '''#Baixo Direita
+        #Baixo Direita
         for i in range(0,50,11):
+            if (pieces[0] + i == pieces[1]):
+                eval += 5
             if (pieces[0] + i == pieces[1]):
                 eval += 5
             if (pieces[0] + i == pieces[2]):
@@ -371,6 +411,8 @@ class Board:
         for i in range(0,50,10):
             if (pieces[0] + i == pieces[1]):
                 eval += 5
+            if (pieces[0] + i == pieces[1]):
+                eval += 5
             if (pieces[0] + i == pieces[2]):
                 eval += 5
         
@@ -378,8 +420,10 @@ class Board:
         for i in range(0,50,9):
             if (pieces[0] + i == pieces[1]):
                 eval += 5
+            if (pieces[0] + i == pieces[1]):
+                eval += 5
             if (pieces[0] + i == pieces[2]):
-                eval += 5'''
+                eval += 5
 
         return eval
                 
@@ -419,10 +463,14 @@ class Board:
             eval -= 5000
 
         #Verificar 2 em Linha (sem terem que estar adjacentes)
-        eval += self.check2inLine(player1Pieces)
-        eval -= self.check2inLine(player2Pieces)
+        #eval += self.check2inLine(player1Pieces)
+        #eval -= self.check2inLine(player2Pieces)
 
-        return eval + random.randint(1,5)
+
+        #eval += self.checkSurrounding(player1Pieces)
+        #eval -= self.checkSurrounding(player2Pieces)
+
+        return eval
 
     def checkPieces(self, list):          
         return self.check3inARow(list)

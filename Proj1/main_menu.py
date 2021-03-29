@@ -5,9 +5,10 @@ pygame.init()
 from neutreeko.constants import *
 from neutreeko.game import Game
 from minimax.algorithm import AI
+from neutreeko.move import Move
 import time
 import random
-from bots.easy import *
+from bots.botmethods import *
 
 def start():
     run = True
@@ -23,7 +24,30 @@ def start():
         clock.tick(FPS)
         pygame.display.update()
 
-        if global_mode == "cvc":
+        if game.pressedHint is True and game.turn == 1:
+            for x in range(5):
+                for y in range(5):
+                    if isinstance(game.board.board[x][y], Move) is True:
+                        game.board.board[x][y] = 0
+            game.update()
+            game.update()
+            pygame.display.update()
+
+            new_board = None
+            while new_board == None or new_board.board == game.board.board:
+                value, new_board = ai.minimax_ab(game.board, 5, 1, float('-inf'), float('+inf'))
+            game.turn = 2
+            eval1 = new_board.evaluationPlayer(1)
+            eval2 = new_board.evaluationPlayer(2)
+            updateBars(WIN, eval1, eval2)
+            game.board = new_board
+            game.update()
+            winner = game.board.checkWin()
+            if (winner >= 0):
+                display_message(WIN, str(winner))
+                return 1
+            game.pressedHint = False
+        elif global_mode == "cvc":
             game.update()
             pygame.display.update()
             global_name1[0] = 'AI_1'
@@ -37,9 +61,9 @@ def start():
                 game.board = new_board
                 game.update()
                 winner = game.board.checkWin()
-                if (winner >= 0): 
+                if (winner >= 0):
                     time.sleep(1)
-                    display_message(WIN, str(winner)) 
+                    display_message(WIN, str(winner))
                     run = False
                 game.turn = 2
             elif game.turn == 2:
@@ -51,9 +75,9 @@ def start():
                 game.board = new_board
                 game.update()
                 winner = game.board.checkWin()
-                if (winner >= 0): 
+                if (winner >= 0):
                     time.sleep(1)
-                    display_message(WIN, str(winner)) 
+                    display_message(WIN, str(winner))
                     run = False
                 game.turn = 1
         else:
@@ -68,7 +92,10 @@ def start():
                     WIN.blit(player1, (270, 730))
                     WIN.blit(image, (180,120))
                     WIN.blit(image, (180,670))
-                    if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.type == pygame.KEYDOWN:
+                        if event.unicode == 'h':
+                            game.pressedHint = True
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
                         pos = pygame.mouse.get_pos()
                         row, col = get_row_col_from_mouse(pos)
                         movePlayed = game.select(row, col)
@@ -78,8 +105,8 @@ def start():
                             updateBars(WIN, eval1, eval2)
                             game.update()
                             winner = game.board.checkWin()
-                            if (winner >= 0): 
-                                display_message(WIN, str(winner)) 
+                            if (winner >= 0):
+                                display_message(WIN, str(winner))
                                 time.sleep(1)
                                 run = False
                 elif global_mode == "pvc":
@@ -106,16 +133,20 @@ def start():
                             global_name2[0] = "Andrea"
                             image = pygame.image.load(r'.\assets\botez.png')
                             WIN.blit(image, (550, 100))
-                        elif (global_heuristic == 6):
+                        elif (global_heuristic == 5):
                             global_name2[0] = "Hikaru"
                             image = pygame.image.load(r'.\assets\hikaru.png')
                             WIN.blit(image, (550, 100))
-                    if global_method == 1:
-                        if method_1(game, ai, event, global_heuristic) == 1:
-                            run = False
-                    elif global_method == 2:
-                        if method_2(game, ai, event, global_heuristic) == 1:
-                            run = False
+                    if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN or game.turn == 2 and game.pressedHint is False:
+                        if global_method == 1:
+                            if method_1(game, ai, event, global_heuristic) == 1:
+                                run = False
+                        elif global_method == 2:
+                            if method_2(game, ai, event, global_heuristic) == 1:
+                                run = False
+                        elif global_method == 3:
+                            if method_3(game, ai, event, global_heuristic) == 1:
+                                run = False
         game.update()
         pygame.display.update()
 
@@ -143,7 +174,7 @@ def set_mode(value, mode):
         menu.remove_widget(select_difficulty_pc1)
         menu.remove_widget(select_difficulty_pc2)
         menu.add_generic_widget(nome1)
-        menu.add_generic_widget(nome2) 
+        menu.add_generic_widget(nome2)
 
     elif mode == 2 and global_mode == "pvp":
         global_mode = "pvc"
@@ -171,12 +202,12 @@ def set_mode(value, mode):
         global_mode = "cvc"
         menu.remove_widget(nome1)
         menu.remove_widget(select_method)
-        menu.remove_widget(select_heuristic) 
+        menu.remove_widget(select_heuristic)
         menu.add_generic_widget(select_difficulty_pc1)
         menu.add_generic_widget(select_difficulty_pc2)
 
-    menu.add_generic_widget(quit) 
-    
+    menu.add_generic_widget(quit)
+
 def set_name1(name1):
     global global_name1
     global_name1[0] = name1
@@ -190,13 +221,14 @@ def set_method(value, method):
     global global_method
     if method == 1: global_method = 1
     elif method == 2: global_method = 2
+    elif method == 3: global_method = 3
 
 def set_heuristic(value, heuristic):
     global global_heuristic
     if heuristic == 1: global_heuristic = 2
     elif heuristic == 2: global_heuristic = 4
-    elif heuristic == 3: global_heuristic = 6
-    
+    elif heuristic == 3: global_heuristic = 5
+
 
 def set_difficulty_pc1(value, difficulty1):
     global global_pc1
@@ -225,7 +257,7 @@ menu.add.button('Play', start_the_game)
 menu.add.selector('Mode: ', [('Player v Player', 1), ('Player v AI', 2), ('AI v AI', 3)], onchange=set_mode)
 nome1 = menu.add.text_input('Player1: ', default='Default', onchange=(set_name1))
 nome2 = menu.add.text_input('Player2: ', default='Default', onchange=(set_name2))
-select_method = menu.add.selector('Search Method: ', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2)], onchange=set_method)
+select_method = menu.add.selector('Search Method: ', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2), ('Negamax', 3)], onchange=set_method)
 select_heuristic = menu.add.selector('Heuristic: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_heuristic)
 select_difficulty_pc1 = menu.add.selector('Pc1 difficulty: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_difficulty_pc1)
 select_difficulty_pc2 = menu.add.selector('Pc2 difficulty: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)], onchange=set_difficulty_pc2)
@@ -243,7 +275,7 @@ def main():
         for event in events:
             if event.type == pygame.QUIT:
                 running = False
-        
+
         if menu.is_enabled():
             menu.update(events)
             menu.draw(WIN)

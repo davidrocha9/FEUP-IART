@@ -7,7 +7,7 @@ from neutreeko.game import Game
 from minimax.algorithm import AI
 import time
 import random
-from bots.easy import *
+from bots.botmethods import *
 from collections import Counter
 
 FPS = 60
@@ -90,7 +90,7 @@ def drawName(WIN, diff):
     elif diff == 4:
         name = END_FONT.render("Andrea Botez - Chess Streamer", True, (0,0,0))
         WIN.blit(name, (155, 30))
-    elif diff == 6:
+    elif diff == 5:
         name = END_FONT.render("Hikaru Nakamura - Chess Grandmaster", True, (0,0,0))
         WIN.blit(name, (100, 30))
 
@@ -101,7 +101,7 @@ def drawWelcome(WIN, diff):
         hint = talkFont.render("BING. BANG. BOOM. Let’s do this!", True, (0,0,0))
     elif diff == 4:
         hint = talkFont.render("I have time before my stream... good luck :)", True, (0,0,0))
-    elif diff == 6:
+    elif diff == 5:
         hint = talkFont.render("Let's see what you have prepared for me.", True, (0,0,0))
     WIN.blit(hint, (175, 130))
 
@@ -114,7 +114,7 @@ def drawLine(WIN, diff):
     elif (diff == 4):
         x = random.randint(0,len(botezLines)-1)
         speach = talkFont.render(botezLines[x], True, (0,0,0))
-    elif (diff == 6):
+    elif (diff == 5):
         x = random.randint(0,len(hikaruLines)-1)
         speach = talkFont.render(hikaruLines[x], True, (0,0,0))
     WIN.blit(speach, (175, 130))
@@ -132,9 +132,9 @@ def drawEnding(player, diff, WIN):
             hint = talkFont.render("I kinda wished this would be over sooner.", True, (0,0,0))
         else:
             hint = talkFont.render("That loss was chat's fault.", True, (0,0,0))
-    elif diff == 6:
+    elif diff == 5:
         if player == 2:
-            hint = talkFont.render("That was good, but not good enough for Magnus.", True, (0,0,0))
+            hint = talkFont.render("Good, but not good enough for Magnus.", True, (0,0,0))
         else:
             hint = talkFont.render("How did I not see that? I'm so bad.", True, (0,0,0))
     WIN.blit(hint, (175, 130))

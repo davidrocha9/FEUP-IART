@@ -18,6 +18,7 @@ class Game:
         self.player1Pieces = []
         self.player2Pieces = []
         self.currentPossibleMoves = []
+        self.pressedHint = False
 
     def select(self, row, col):
         self.player1Pieces = self.board.getPiecesCoordinates(1)
