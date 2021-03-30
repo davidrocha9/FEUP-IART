@@ -20,7 +20,7 @@ talkFont = pygame.font.Font('freesansbold.ttf', 15)
 nameFont = pygame.font.Font('freesansbold.ttf', 25)
 global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2
 global_mode = "pvp"
-global_heuristic = 2
+global_heuristic = 1
 global_method = 1
 global_pc1 = 1
 global_pc2 = 1
@@ -68,7 +68,9 @@ def display_message(WIN, winner):
         pygame.display.update()
         time.sleep(3)
         
-
+def drawBars(WIN):
+    pygame.draw.rect(WIN, WHITE, (680, 220, 25, 225)) #Barra branca
+    pygame.draw.rect(WIN, BLUE, (680, 445, 25, 225)) #Barra preta
 
 def drawCards(WIN):
     #WIN.fill(PURPLE)
@@ -78,10 +80,11 @@ def drawCards(WIN):
 
 def updateBars(WIN, p1, p2):
     total = p1 + p2
-    p1Percentage = 0.5
-    p2Percentage = 0.5
-    pygame.draw.rect(WIN, WHITE, (680, 220, 25, p2Percentage * 450)) #Barra branca
-    pygame.draw.rect(WIN, BLUE, (680, 220 + p2Percentage * 450, 25, p1Percentage * 450)) #Barra preta
+    if total > 0:
+        p1Percentage = float(p1/total)
+        p2Percentage = float(p2/total)
+        pygame.draw.rect(WIN, WHITE, (680, 220, 25, p2Percentage * 450)) #Barra branca
+        pygame.draw.rect(WIN, BLUE, (680, 220 + p2Percentage * 450, 25, p1Percentage * 450)) #Barra preta
 
 def drawName(WIN, diff):
     if diff == 2:

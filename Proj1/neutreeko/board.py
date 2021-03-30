@@ -449,6 +449,10 @@ class Board:
         if (self.check3inARow(playerPieces)):
             eval += 5000
 
+        #Verificar 2 em Linha (sem terem que estar adjacentes)
+        eval += self.check2inLine(playerPieces)
+        eval += self.checkSurrounding(playerPieces)
+
         return eval
 
     def evaluation(self):
@@ -462,13 +466,10 @@ class Board:
         if (self.check3inARow(player2Pieces)):
             eval -= 5000
 
-        #Verificar 2 em Linha (sem terem que estar adjacentes)
-        #eval += self.check2inLine(player1Pieces)
-        #eval -= self.check2inLine(player2Pieces)
-
-
-        #eval += self.checkSurrounding(player1Pieces)
-        #eval -= self.checkSurrounding(player2Pieces)
+        if (self.check2inLine(player1Pieces)):
+            eval += 5000
+        if (self.check2inLine(player2Pieces)):
+            eval -= 5000
 
         return eval
 

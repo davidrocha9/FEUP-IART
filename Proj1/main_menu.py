@@ -19,6 +19,7 @@ def start():
     blackBarY = 360
     botStarted = False
     hintCounter = 0
+    drawBars(WIN)
 
     while run:
         clock.tick(FPS)
@@ -48,12 +49,15 @@ def start():
                 return 1
             game.pressedHint = False
         elif global_mode == "cvc":
+            print(game.turn)
             game.update()
             pygame.display.update()
             global_name1[0] = 'AI_1'
             global_name2[0] = 'AI_2'
             if game.turn == 1:
-                value, new_board = ai.minimax_ab(game.board, global_pc1, 1, float('-inf'), float('+inf'))
+                new_board = None
+                while new_board == None or new_board.board == game.board.board:
+                    value, new_board = ai.minimax_ab(game.board, global_pc1, 1, float('-inf'), float('+inf'))
                 time.sleep(1)
                 eval1 = new_board.evaluationPlayer(1)
                 eval2 = new_board.evaluationPlayer(2)
@@ -67,7 +71,9 @@ def start():
                     run = False
                 game.turn = 2
             elif game.turn == 2:
-                value, new_board = ai.minimax_ab(game.board, global_pc2, 2, float('-inf'), float('+inf'))
+                new_board = None
+                while new_board == None or new_board.board == game.board.board:
+                    value, new_board = ai.minimax_ab(game.board, global_pc2, 2, float('-inf'), float('+inf'))
                 time.sleep(1)
                 eval1 = new_board.evaluationPlayer(1)
                 eval2 = new_board.evaluationPlayer(2)
@@ -75,7 +81,7 @@ def start():
                 game.board = new_board
                 game.update()
                 winner = game.board.checkWin()
-                if (winner >= 0):
+                if winner >= 0:
                     time.sleep(1)
                     display_message(WIN, str(winner))
                     run = False
@@ -232,7 +238,7 @@ def set_heuristic(value, heuristic):
 
 def set_difficulty_pc1(value, difficulty1):
     global global_pc1
-    if difficulty1 == 1: global_pc1 = 1
+    if difficulty1 == 1: global_pc1 = 2
     elif difficulty1 == 2: global_pc1 = 3
     elif difficulty1 == 3: global_pc1 = 5
 
@@ -240,7 +246,7 @@ def set_difficulty_pc2(value, difficulty2):
     global global_pc2
     if difficulty2 == 1: global_pc2 = 2
     elif difficulty2 == 2: global_pc2 = 3
-    elif difficulty2 == 3: global_pc2 = 4
+    elif difficulty2 == 3: global_pc2 = 5
 
 mytheme = pygame_menu.themes.THEME_DARK.copy()
 
