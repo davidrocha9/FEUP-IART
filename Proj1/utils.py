@@ -20,7 +20,7 @@ talkFont = pygame.font.Font('freesansbold.ttf', 15)
 nameFont = pygame.font.Font('freesansbold.ttf', 25)
 global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2
 global_mode = "pvp"
-global_heuristic = 1
+global_heuristic = 2
 global_method = 1
 global_pc1 = 1
 global_pc2 = 1
@@ -51,7 +51,7 @@ def display_message(WIN, winner):
         global_name1[0] = "Default1"
         global_name2[0] = "Default2"
         time.sleep(3)
-        
+
     elif winner == "2":
         #pygame.draw.rect(WIN, (1,99,110,255), (150, 250, 500, 300))
         end_text = END_FONT.render(str(global_name2[0]) + " won!", 1, BLACK)
@@ -67,7 +67,7 @@ def display_message(WIN, winner):
         WIN.blit(end_text, ((WIDTH - end_text.get_width()) // 2, (WIDTH - end_text.get_height()) // 2))
         pygame.display.update()
         time.sleep(3)
-        
+
 def drawBars(WIN):
     pygame.draw.rect(WIN, WHITE, (680, 220, 25, 225)) #Barra branca
     pygame.draw.rect(WIN, BLUE, (680, 445, 25, 225)) #Barra preta
@@ -111,13 +111,13 @@ def drawWelcome(WIN, diff):
 def drawLine(WIN, diff):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
-    if (diff == 2):
+    if diff == 2:
         x = random.randint(0,len(xqcLines)-1)
         speach = talkFont.render(xqcLines[x], True, (0,0,0))
-    elif (diff == 4):
+    elif diff == 4:
         x = random.randint(0,len(botezLines)-1)
         speach = talkFont.render(botezLines[x], True, (0,0,0))
-    elif (diff == 5):
+    elif diff == 5:
         x = random.randint(0,len(hikaruLines)-1)
         speach = talkFont.render(hikaruLines[x], True, (0,0,0))
     WIN.blit(speach, (175, 130))

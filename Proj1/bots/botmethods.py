@@ -1,20 +1,11 @@
-import pygame
-from pygame import gfxdraw
-import pygame_menu
-import time
-from neutreeko.constants import *
-from neutreeko.game import Game
-from minimax.algorithm import AI
-import time
-import random
 from utils import *
+
 
 # Without cuts
 def method_1(game, ai, event, diff):
     if game.turn == 2:
         new_board = None
-        while new_board == None or new_board.board == game.board.board:
-            value, new_board = ai.minimax(game.board, diff, 2, float('-inf'), float('+inf'))
+        value, new_board = ai.minimax(game.board, diff, 2, float('-inf'), float('+inf'))
         game.turn = 1
         eval1 = new_board.evaluationPlayer(1)
         eval2 = new_board.evaluationPlayer(2)
@@ -22,7 +13,7 @@ def method_1(game, ai, event, diff):
         game.board = new_board
         game.update()
         winner = game.board.checkWin()
-        if (winner >= 0):
+        if winner >= 0:
             drawEnding(winner, diff, WIN)
             display_message(WIN, str(winner))
             return 1
@@ -35,23 +26,23 @@ def method_1(game, ai, event, diff):
             pos = pygame.mouse.get_pos()
             row, col = get_row_col_from_mouse(pos)
             movePlayed = game.select(row, col)
-            if (movePlayed == 1):
+            if movePlayed == 1:
                 eval1 = game.board.evaluationPlayer(1)
                 eval2 = game.board.evaluationPlayer(2)
                 updateBars(WIN, eval1, eval2)
                 game.update()
                 winner = game.board.checkWin()
-                if (winner >= 0):
+                if winner >= 0:
                     drawEnding(winner, diff, WIN)
                     display_message(WIN, str(winner))
                     return 1
+
 
 # With Cuts
 def method_2(game, ai, event, diff):
     if game.turn == 2:
         new_board = None
-        while new_board == None or new_board.board == game.board.board:
-            value, new_board = ai.minimax_ab(game.board, diff, 2, float('-inf'), float('+inf'))
+        value, new_board = ai.minimax_ab(game.board, diff, 2, float('-inf'), float('+inf'))
         game.turn = 1
         eval1 = new_board.evaluationPlayer(1)
         eval2 = new_board.evaluationPlayer(2)
@@ -59,7 +50,7 @@ def method_2(game, ai, event, diff):
         game.board = new_board
         game.update()
         winner = game.board.checkWin()
-        if (winner >= 0):
+        if winner >= 0:
             drawEnding(winner, diff, WIN)
             display_message(WIN, str(winner))
             return 1
@@ -72,16 +63,17 @@ def method_2(game, ai, event, diff):
             pos = pygame.mouse.get_pos()
             row, col = get_row_col_from_mouse(pos)
             movePlayed = game.select(row, col)
-            if (movePlayed == 1):
+            if movePlayed == 1:
                 eval1 = game.board.evaluationPlayer(1)
                 eval2 = game.board.evaluationPlayer(2)
                 updateBars(WIN, eval1, eval2)
                 game.update()
                 winner = game.board.checkWin()
-                if (winner >= 0):
+                if winner >= 0:
                     drawEnding(winner, diff, WIN)
                     display_message(WIN, str(winner))
                     return 1
+
 
 # With Cuts
 def method_3(game, ai, event, diff):
@@ -96,7 +88,7 @@ def method_3(game, ai, event, diff):
         game.board = new_board
         game.update()
         winner = game.board.checkWin()
-        if (winner >= 0):
+        if winner >= 0:
             drawEnding(winner, diff, WIN)
             display_message(WIN, str(winner))
             return 1
@@ -109,13 +101,13 @@ def method_3(game, ai, event, diff):
             pos = pygame.mouse.get_pos()
             row, col = get_row_col_from_mouse(pos)
             movePlayed = game.select(row, col)
-            if (movePlayed == 1):
+            if movePlayed == 1:
                 eval1 = game.board.evaluationPlayer(1)
                 eval2 = game.board.evaluationPlayer(2)
                 updateBars(WIN, eval1, eval2)
                 game.update()
                 winner = game.board.checkWin()
-                if (winner >= 0):
+                if winner >= 0:
                     drawEnding(winner, diff, WIN)
                     display_message(WIN, str(winner))
                     return 1
