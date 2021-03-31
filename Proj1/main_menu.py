@@ -1,7 +1,6 @@
 import pygame
 
 pygame.init()
-from neutreeko.move import Move
 from bots.botmethods import *
 
 
@@ -49,7 +48,7 @@ def start():
                             eval2 = game.board.evaluationPlayer(2)
                             updateBars(WIN, eval1, eval2)
                             game.update()
-                            winner = game.board.checkWin()
+                            winner = game.board.checkWinAndTie()
                             if (winner >= 0):
                                 display_message(WIN, str(winner))
                                 time.sleep(1)
