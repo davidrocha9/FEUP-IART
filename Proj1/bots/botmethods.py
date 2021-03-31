@@ -106,3 +106,28 @@ def computerplay(game, ai, diff1, diff2):
         if winner >= 0:
             display_message(WIN, str(winner))
             return 1
+
+def calculateHint(game, ai):
+    value, new_board = ai.minimax_ab(game.board, 5, game.turn, float('-inf'), float('+inf'))
+    oldBoard = game.board.board_as_string()
+    newBoard = new_board.board_as_string()
+
+    selectedPiece = 0
+    selectedEnd = 0
+
+    for x in range(25):
+        if oldBoard[x] != newBoard[x]:
+            print(x)
+            if oldBoard[x] == 0:
+                selectedPiece = x
+            else:
+                selectedEnd = x
+    print(selectedPiece)
+    print(selectedEnd)
+    '''game.board = new_board
+    selectedX = selectedPiece // 5
+    selectedY = selectedPiece % 5
+    print(selectedPiece)
+    print(selectedEnd)
+    print(selectedX)
+    print(selectedY)'''

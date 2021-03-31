@@ -7,16 +7,16 @@ import time
 class AI:
     def minimax(self, position, depth, player, alpha, beta):
         if depth == 0 or position.checkWin() != -1:
-            if (player == 1):
+            if player == 1:
                 return position.evaluation() - depth, position
-            if (player == 2):
+            if player == 2:
                 return position.evaluation() + depth, position
 
         if player == 1:
             maxEval = float('-inf')
             best_move = None
             for move in self.get_all_moves(position, 1):
-                evaluation = self.minimax(move, depth - 1, 2, alpha, beta)[0]
+                evaluation = self.minimax_ab(move, depth - 1, 2, alpha, beta)[0]
                 if evaluation > maxEval:
                     maxEval = evaluation
                     best_move = move
@@ -27,7 +27,7 @@ class AI:
             minEval = float('+inf')
             best_move = None
             for move in self.get_all_moves(position, 2):
-                evaluation = self.minimax(move, depth - 1, 1, alpha, beta)[0]
+                evaluation = self.minimax_ab(move, depth - 1, 1, alpha, beta)[0]
                 if evaluation < minEval:
                     minEval = evaluation
                     best_move = move

@@ -16,8 +16,10 @@ def start():
         clock.tick(FPS)
         pygame.display.update()
 
-
-        if global_mode == "cvc":
+        if game.pressedHint is True:
+            calculateHint(game, ai)
+            game.pressedHint = False
+        elif global_mode == "cvc":
             game.update()
             pygame.display.update()
             if computerplay(game, ai, global_pc1, global_pc2) == 1:
