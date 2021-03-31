@@ -79,7 +79,7 @@ class Board:
                 if (self.player1Pieces[x].row == startX and self.player1Pieces[x].col == startY):
                     self.player1Pieces[x] = self.board[endX][endY]
                     break
-        elif (player == 1):
+        elif (player == 2):
             for x in range(3):
                 if (self.player2Pieces[x].row == startX and self.player2Pieces[x].col == startY):
                     self.player2Pieces[x] = self.board[endX][endY]
@@ -103,14 +103,14 @@ class Board:
         return row, col
 
     def checkDown(self, row, col):
-        if (row == 4 or self.board[row + 1][col] != 0):
-            return (-1, -1)
+        if row == 4 or self.board[row + 1][col] != 0:
+            return -1, -1
 
         while True:
             row = row + 1
-            if (row > 4):
+            if row > 4:
                 break
-            elif (self.board[row][col] == 0):
+            elif self.board[row][col] == 0:
                 continue
             else:
                 break
@@ -310,10 +310,8 @@ class Board:
         return possibleMoves
 
     def check3inARow(self, list):
-        pieces = []
-        for i in range(3):
-            val = (list[i].y // SQUARE_SIZE) * 10 + (list[i].x // SQUARE_SIZE)
-            pieces.append(val)
+        pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE), (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE), (list[2].y // SQUARE_SIZE) * 10 + (list[2].x // SQUARE_SIZE)]
+        pieces = sorted(pieces)
 
         # Direita
         if (pieces[0] + 1 == pieces[1] and pieces[1] + 1 == pieces[2]):
@@ -438,18 +436,10 @@ class Board:
         return eval
 
     def getPiecesCoordinates(self, player):
-        pattern = BLUE
-        if (player == 2):
-            pattern = WHITE
-
-        result = []
-        for x in range(5):
-            for y in range(5):
-                piece = self.getPiece(x, y)
-                if (piece != 0):
-                    if (piece.color == pattern):
-                        result.append(piece)
-        return result
+        if player == 1:
+            return self.player1Pieces
+        elif player == 2:
+            return self.player2Pieces
 
     def evaluationPlayer(self, player):
         eval = 0
@@ -476,8 +466,9 @@ class Board:
         if self.check3inARow(player2Pieces):
             eval -= 5000
 
-        eval += self.check2inLine(player1Pieces)
-        eval -= self.checkSurrounding(player2Pieces)
+        if (eval < 5000 and eval > -5000):
+            eval += self.check2inLine(player1Pieces)
+            eval -= self.checkSurrounding(player2Pieces)
 
         return eval
 
@@ -485,6 +476,16 @@ class Board:
         return self.check3inARow(list)
 
     def checkWin(self):
+        player1Pieces = self.getPiecesCoordinates(1)
+        player2Pieces = self.getPiecesCoordinates(2)
+        if (self.check3inARow(player1Pieces)):
+            return 1
+        elif (self.check3inARow(player2Pieces)):
+            return 2
+
+        return -1
+
+    def checkWinAndTie(self):
         player1Pieces = self.getPiecesCoordinates(1)
         player2Pieces = self.getPiecesCoordinates(2)
         if (self.checkPieces(player1Pieces)):
