@@ -19,7 +19,7 @@ class Board:
     def draw_squares(self, win):
         for row in range(ROWS):
             for col in range(COLS):
-                if ((row % 2 == 0 and col % 2 == 0) or (row % 2 == 1 and col % 2 == 1)):
+                if (row % 2 == 0 and col % 2 == 0) or (row % 2 == 1 and col % 2 == 1):
                     pygame.draw.rect(win, LIGHTBLUE,
                                      (175 + row * SQUARE_SIZE, 220 + col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
                 else:
@@ -59,7 +59,7 @@ class Board:
         result = ""
         for i in range(5):
             for j in range(5):
-                if (self.board[i][j] == 0):
+                if self.board[i][j] == 0:
                     result += "0"
                 elif (isinstance(self.board[i][j], Piece)):
                     if (self.board[i][j].color == (255, 255, 255)):
@@ -74,26 +74,26 @@ class Board:
         self.board[startX][startY] = 0
         self.board[endX][endY] = Piece(endX, endY, color)
         self.lastMove = endX, endY
-        if (player == 1):
+        if player == 1:
             for x in range(3):
-                if (self.player1Pieces[x].row == startX and self.player1Pieces[x].col == startY):
+                if self.player1Pieces[x].row == startX and self.player1Pieces[x].col == startY:
                     self.player1Pieces[x] = self.board[endX][endY]
                     break
-        elif (player == 2):
+        elif player == 2:
             for x in range(3):
-                if (self.player2Pieces[x].row == startX and self.player2Pieces[x].col == startY):
+                if self.player2Pieces[x].row == startX and self.player2Pieces[x].col == startY:
                     self.player2Pieces[x] = self.board[endX][endY]
                     break
 
     def checkUp(self, row, col):
-        if (row == 0 or self.board[row - 1][col] != 0):
-            return (-1, -1)
+        if row == 0 or self.board[row - 1][col] != 0:
+            return -1, -1
 
         while True:
             row = row - 1
-            if (row < 0):
+            if row < 0:
                 break
-            elif (self.board[row][col] == 0):
+            elif self.board[row][col] == 0:
                 continue
             else:
                 break
@@ -120,14 +120,14 @@ class Board:
         return row, col
 
     def checkLeft(self, row, col):
-        if (col == 0 or self.board[row][col - 1] != 0):
-            return (-1, -1)
+        if col == 0 or self.board[row][col - 1] != 0:
+            return -1, -1
 
         while True:
             col = col - 1
             if (col < 0):
                 break
-            elif (self.board[row][col] == 0):
+            elif self.board[row][col] == 0:
                 continue
             else:
                 break
@@ -465,7 +465,7 @@ class Board:
             eval += self.checkSurrounding(player1Pieces)
             eval -= self.checkSurrounding(player2Pieces)
 
-        return eval
+        return eval + random.randint(0,5)
 
     def checkPieces(self, list):
         return self.check3inARow(list)

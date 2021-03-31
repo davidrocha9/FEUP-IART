@@ -15,7 +15,7 @@ FPS = 60
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Neutreeko')
 END_FONT = pygame.font.Font('freesansbold.ttf', 32)
-hintFont = pygame.font.Font('freesansbold.ttf', 25)
+hintFont = pygame.font.Font('freesansbold.ttf', 10)
 talkFont = pygame.font.Font('freesansbold.ttf', 15)
 nameFont = pygame.font.Font('freesansbold.ttf', 25)
 global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2
@@ -39,6 +39,19 @@ def get_row_col_from_mouse(pos):
     col = x // SQUARE_SIZE
     return row, col
 
+
+def drawHintBoard(game):
+    lamp = pygame.image.load(r'.\assets\lamp.png')
+    counter1 = nameFont.render("Counter: " + str(game.p1HintCounter), 1, (0, 0, 0))
+    counter2 = nameFont.render("Counter: " + str(game.p2HintCounter), 1, (0, 0, 0))
+    press = talkFont.render("Press H", 1, (0, 0, 0))
+    press1 = talkFont.render("for a Hint!", 1, (0, 0, 0))
+    pygame.draw.rect(WIN, CARDCOLOR, (15, 275, 150, 335), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
+    WIN.blit(counter1, (25, 530))
+    WIN.blit(counter2, (25, 330))
+    WIN.blit(press, (65, 465))
+    WIN.blit(press1, (55, 480))
+    WIN.blit(lamp, (20, 375))
 
 # To do colocar estatisticas
 def display_message(WIN, winner):

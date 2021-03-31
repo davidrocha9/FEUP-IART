@@ -17,8 +17,15 @@ def start():
         pygame.display.update()
 
         if game.pressedHint is True:
-            calculateHint(game, ai)
+            if game.turn == 1:
+                game.p1HintCounter += 1
+            else:
+                game.p2HintCounter += 1
             game.pressedHint = False
+            drawHintBoard(game)
+            game.update()
+            pygame.display.update()
+            calculateHint(game, ai, WIN)
         elif global_mode == "cvc":
             game.update()
             pygame.display.update()
@@ -34,6 +41,7 @@ def start():
                     image = pygame.image.load(r'.\assets\defaultplayer.png')
                     player1 = nameFont.render(global_name1[0], True, (0, 0, 0))
                     player2 = nameFont.render(global_name2[0], True, (0, 0, 0))
+                    drawHintBoard(game)
                     WIN.blit(player2, (270, 180))
                     WIN.blit(player1, (270, 730))
                     WIN.blit(image, (180, 120))
@@ -62,12 +70,9 @@ def start():
                     WIN.blit(player1, (270, 730))
                     WIN.blit(image1, (180, 670))
                     WIN.blit(image, (20, 350))
+                    drawHintBoard(game)
                     if botStarted is False:
                         drawCards(WIN)
-                        hint = END_FONT.render('Press H ', True, (0, 0, 0))
-                        hint1 = END_FONT.render('for a Hint', True, (0, 0, 0))
-                        WIN.blit(hint, (30, 450))
-                        WIN.blit(hint1, (20, 480))
                         drawWelcome(WIN, global_heuristic)
                         drawName(WIN, global_heuristic)
                         botStarted = True

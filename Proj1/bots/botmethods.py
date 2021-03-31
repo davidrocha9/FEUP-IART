@@ -1,3 +1,4 @@
+from neutreeko.piece import Piece
 from utils import *
 import time
 
@@ -107,8 +108,8 @@ def computerplay(game, ai, diff1, diff2):
             display_message(WIN, str(winner))
             return 1
 
-def calculateHint(game, ai):
-    value, new_board = ai.minimax_ab(game.board, 5, game.turn, float('-inf'), float('+inf'))
+def calculateHint(game, ai, WIN):
+    value, new_board = ai.minimax_ab(game.board, 4, game.turn, float('-inf'), float('+inf'))
     oldBoard = game.board.board_as_string()
     newBoard = new_board.board_as_string()
 
@@ -117,17 +118,22 @@ def calculateHint(game, ai):
 
     for x in range(25):
         if oldBoard[x] != newBoard[x]:
-            print(x)
-            if oldBoard[x] == 0:
+            if int(oldBoard[x]) != 0:
                 selectedPiece = x
             else:
                 selectedEnd = x
-    print(selectedPiece)
-    print(selectedEnd)
-    '''game.board = new_board
     selectedX = selectedPiece // 5
     selectedY = selectedPiece % 5
-    print(selectedPiece)
-    print(selectedEnd)
-    print(selectedX)
-    print(selectedY)'''
+    selectedEndX = selectedEnd // 5
+    selectedEndY = selectedEnd % 5
+
+    pygame.draw.rect(WIN, BACKGROUNDGREEN, (175 + selectedY * SQUARE_SIZE, 220 + selectedX * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+    if game.turn == 2:
+        piece = Piece(selectedX, selectedY, WHITE)
+    else:
+        piece = Piece(selectedX, selectedY, BLUE)
+    piece.draw(WIN)
+    pygame.draw.rect(WIN, BACKGROUNDGREEN, (175 + selectedEndY * SQUARE_SIZE, 220 + selectedEndX * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+    pygame.display.update()
+    time.sleep(1)
+    #pygame.draw.rect(WIN, WHITE, (100 + 100, 100, 100))
