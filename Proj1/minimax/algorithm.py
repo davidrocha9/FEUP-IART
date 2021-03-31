@@ -93,5 +93,5 @@ class AI:
                 new_board = self.simulate_move(piece, move, temp_board, player)
                 moves.append(new_board)
 
-        moves = sorted(moves, key=self.sortMoves, reverse=False)
+        moves = sorted(moves, key=self.sortMoves, reverse=True)
         return moves

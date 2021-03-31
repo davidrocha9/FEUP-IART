@@ -42,7 +42,10 @@ def method_1(game, ai, event, diff):
 # With Cuts
 def method_2(game, ai, event, diff):
     if game.turn == 2:
+        tic = time.perf_counter()
         value, new_board = ai.minimax_ab(game.board, diff, 2, float('-inf'), float('+inf'))
+        toc = time.perf_counter()
+        print(f"Downloaded the tutorial in {toc - tic:0.4f} seconds")
         game.turn = 1
         eval1 = new_board.evaluationPlayer(1)
         eval2 = new_board.evaluationPlayer(2)

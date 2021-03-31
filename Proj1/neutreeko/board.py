@@ -352,86 +352,79 @@ class Board:
 
         return eval
 
-    def checkSurrounding(self, pieces):
+    def checkSurrounding(self, list):
+        pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE), (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE), (list[2].y // SQUARE_SIZE) * 10 + (list[2].x // SQUARE_SIZE)]
+        pieces = sorted(pieces)
         eval = 0
-        for piece in pieces:
-            # Cima
-            if (piece.row > 0):
-                if (self.board[piece.row - 1][piece.col] != 0):
-                    eval += 1
-                # Cima Esquerda
-                if (piece.col > 0):
-                    if (self.board[piece.row - 1][piece.col - 1] != 0):
-                        eval += 1
-                # Cima Direita
-                if (piece.col < 4):
-                    if (self.board[piece.row - 1][piece.col + 1] != 0):
-                        eval += 1
-            # Baixo
-            if (piece.row < 4):
-                if (self.board[piece.row + 1][piece.col] != 0):
-                    eval += 1
-                # Baixo Esquerda
-                if (piece.col > 0):
-                    if (self.board[piece.row + 1][piece.col - 1] != 0):
-                        eval += 1
-                # Baixo Direita
-                if (piece.col < 4):
-                    if (self.board[piece.row + 1][piece.col + 1] != 0):
-                        eval += 1
-            # Esquerda
-            if (piece.col > 0):
-                if (self.board[piece.row][piece.col - 1] != 0):
-                    eval += 1
-            # Direita
-            if (piece.col < 4):
-                if (self.board[piece.row][piece.col + 1] != 0):
-                    eval += 1
+
+        # Direita
+        if pieces[1] - pieces[0] == 1:
+            eval += 10
+        if pieces[2] - pieces[1] == 1:
+            eval += 10
+        if pieces[2] - pieces[0] == 1:
+            eval += 10
+
+        # Baixo Direita
+        if pieces[1] - pieces[0] == 11:
+            eval += 10
+        if pieces[2] - pieces[1] == 11:
+            eval += 10
+        if pieces[2] - pieces[0] == 11:
+            eval += 10
+
+        # Baixo
+        if pieces[1] - pieces[0] == 10:
+            eval += 10
+        if pieces[2] - pieces[1] == 10:
+            eval += 10
+        if pieces[2] - pieces[0] == 10:
+            eval += 10
+
+        # Baixo
+        if pieces[1] - pieces[0] == 9:
+            eval += 10
+        if pieces[2] - pieces[1] == 9:
+            eval += 10
+        if pieces[2] - pieces[0] == 9:
+            eval += 10
 
         return eval
 
-    def check2inLine(self, list):
-        pieces = []
+    def check2inLine(self, pieces):
         eval = 0
-        for i in range(3):
-            val = (list[i].y // SQUARE_SIZE) * 10 + (list[i].x // SQUARE_SIZE)
-            pieces.append(val)
 
-        # Direita
-        for i in range(0, 5):
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[2]):
-                eval += 5
+        #Direita
+        if pieces[0].row == pieces[1].row:
+            eval += 5
+        if pieces[0].row == pieces[2].row:
+            eval += 5
+        if pieces[1].row == pieces[2].row:
+            eval += 5
 
-        # Baixo Direita
-        for i in range(0, 50, 11):
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[2]):
-                eval += 5
+        #Baixo
+        if pieces[0].col == pieces[1].col:
+            eval += 5
+        if pieces[0].col == pieces[2].col:
+            eval += 5
+        if pieces[1].col == pieces[2].col:
+            eval += 5
 
-        # Baixo
-        for i in range(0, 50, 10):
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[2]):
-                eval += 5
+        #Baixo Direita
+        if pieces[1].col - pieces[0].col == pieces[1].row - pieces[0].row:
+            eval += 5
+        if pieces[2].col - pieces[0].col == pieces[2].row - pieces[0].row:
+            eval += 5
+        if pieces[2].col - pieces[1].col == pieces[2].row - pieces[1].row:
+            eval += 5
 
-        # Baixo Esquerda
-        for i in range(0, 50, 9):
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[1]):
-                eval += 5
-            if (pieces[0] + i == pieces[2]):
-                eval += 5
+        #Baixo Esquerda
+        if pieces[0].col - pieces[1].col == pieces[0].row - pieces[1].row:
+            eval += 5
+        if pieces[0].col - pieces[2].col == pieces[0].row - pieces[2].row:
+            eval += 5
+        if pieces[1].col - pieces[2].col == pieces[1].row - pieces[2].row:
+            eval += 5
 
         return eval
 
@@ -468,6 +461,8 @@ class Board:
 
         if (eval < 5000 and eval > -5000):
             eval += self.check2inLine(player1Pieces)
+            eval -= self.check2inLine(player2Pieces)
+            eval += self.checkSurrounding(player1Pieces)
             eval -= self.checkSurrounding(player2Pieces)
 
         return eval
