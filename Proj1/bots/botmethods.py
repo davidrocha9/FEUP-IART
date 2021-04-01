@@ -6,8 +6,12 @@ import time
 # Without cuts
 def method_1(game, ai, event, diff):
     if game.turn == 2:
+        tic = time.perf_counter()
+        ai.counter = 0
         new_board = None
         value, new_board = ai.minimax(game.board, diff, 2, float('-inf'), float('+inf'))
+        toc = time.perf_counter()
+        print_stats((round((toc-tic),4)),ai.counter)
         game.turn = 1
         eval1 = new_board.evaluationPlayer(1)
         eval2 = new_board.evaluationPlayer(2)
@@ -44,9 +48,10 @@ def method_1(game, ai, event, diff):
 def method_2(game, ai, event, diff):
     if game.turn == 2:
         tic = time.perf_counter()
+        ai.counter = 0
         value, new_board = ai.minimax_ab(game.board, diff, 2, float('-inf'), float('+inf'))
         toc = time.perf_counter()
-        print(f"Downloaded the tutorial in {toc - tic:0.4f} seconds")
+        print_stats((round((toc-tic),4)),ai.counter)
         game.turn = 1
         eval1 = new_board.evaluationPlayer(1)
         eval2 = new_board.evaluationPlayer(2)
@@ -79,8 +84,12 @@ def method_2(game, ai, event, diff):
                     return 1
 
 def computerplay(game, ai, diff1, diff2):
-    if game.turn == 2:
-        value, new_board = ai.minimax_ab(game.board, diff2, 2, float('-inf'), float('+inf'))
+    if game.turn == 2 and global_method2 == 1:
+        tic = time.perf_counter()
+        ai.counter = 0
+        value, new_board = ai.minimax(game.board, diff2, 2, float('-inf'), float('+inf'))
+        toc = time.perf_counter()
+        print_stats((round((toc-tic),4)),ai.counter)
         if global_pc1 != 5:
             time.sleep(1)
         game.turn = 1
@@ -93,8 +102,48 @@ def computerplay(game, ai, diff1, diff2):
         if winner >= 0:
             display_message(WIN, str(winner))
             return 1
-    elif game.turn == 1:
+    elif game.turn == 2 and global_method2 == 2:
+        tic = time.perf_counter()
+        ai.counter = 0
+        value, new_board = ai.minimax_ab(game.board, diff2, 2, float('-inf'), float('+inf'))
+        toc = time.perf_counter()
+        print_stats((round((toc-tic),4)),ai.counter)
+        if global_pc1 != 5:
+            time.sleep(1)
+        game.turn = 1
+        eval1 = new_board.evaluationPlayer(1)
+        eval2 = new_board.evaluationPlayer(2)
+        updateBars(WIN, eval1, eval2)
+        game.board = new_board
+        game.update()
+        winner = game.board.checkWinAndTie()
+        if winner >= 0:
+            display_message(WIN, str(winner))
+            return 1
+    elif game.turn == 1 and global_method1 == 1:
+        tic = time.perf_counter()
+        ai.counter = 0
         value, new_board = ai.minimax(game.board, diff1, 1, float('-inf'), float('+inf'))
+        toc = time.perf_counter()
+        print_stats_down((round((toc-tic),4)),ai.counter)
+        if global_pc1 != 5:
+            time.sleep(1)
+        game.turn = 2
+        eval1 = new_board.evaluationPlayer(1)
+        eval2 = new_board.evaluationPlayer(2)
+        updateBars(WIN, eval1, eval2)
+        game.board = new_board
+        game.update()
+        winner = game.board.checkWinAndTie()
+        if winner >= 0:
+            display_message(WIN, str(winner))
+            return 1
+    elif game.turn == 1 and global_method1 == 2:
+        tic = time.perf_counter()
+        ai.counter = 0
+        value, new_board = ai.minimax_ab(game.board, diff1, 1, float('-inf'), float('+inf'))
+        toc = time.perf_counter()
+        print_stats_down((round((toc-tic),4)),ai.counter)
         if global_pc1 != 5:
             time.sleep(1)
         game.turn = 2
@@ -109,7 +158,11 @@ def computerplay(game, ai, diff1, diff2):
             return 1
 
 def calculateHint(game, ai, WIN):
+    tic = time.perf_counter()
+    ai.counter = 0
     value, new_board = ai.minimax_ab(game.board, 4, game.turn, float('-inf'), float('+inf'))
+    toc = time.perf_counter()
+    print_stats((round((toc-tic),4)),ai.counter)
     oldBoard = game.board.board_as_string()
     newBoard = new_board.board_as_string()
 

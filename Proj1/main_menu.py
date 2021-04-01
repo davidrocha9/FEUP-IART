@@ -42,10 +42,10 @@ def start():
                     player1 = nameFont.render(global_name1[0], True, (0, 0, 0))
                     player2 = nameFont.render(global_name2[0], True, (0, 0, 0))
                     drawHintBoard(game)
-                    WIN.blit(player2, (270, 180))
-                    WIN.blit(player1, (270, 730))
-                    WIN.blit(image, (180, 120))
-                    WIN.blit(image, (180, 670))
+                    WIN.blit(player2, (270, 160))
+                    WIN.blit(player1, (270, 740))
+                    WIN.blit(image, (180, 100))
+                    WIN.blit(image, (180, 680))
                     if event.type == pygame.KEYDOWN:
                         if event.unicode == 'h':
                             game.pressedHint = True
@@ -119,6 +119,8 @@ def set_mode(value, mode):
 
     elif mode == 1 and global_mode == "cvc":
         global_mode = "pvp"
+        menu.remove_widget(select_method_pc1)
+        menu.remove_widget(select_method_pc2)
         menu.remove_widget(select_difficulty_pc1)
         menu.remove_widget(select_difficulty_pc2)
         menu.add_generic_widget(nome1)
@@ -134,6 +136,8 @@ def set_mode(value, mode):
 
     elif mode == 2 and global_mode == "cvc":
         global_mode = "pvc"
+        menu.remove_widget(select_method_pc1)
+        menu.remove_widget(select_method_pc2)
         menu.remove_widget(select_difficulty_pc1)
         menu.remove_widget(select_difficulty_pc2)
         menu.add_generic_widget(nome1)
@@ -144,6 +148,8 @@ def set_mode(value, mode):
         global_mode = "cvc"
         menu.remove_widget(nome1)
         menu.remove_widget(nome2)
+        menu.add_generic_widget(select_method_pc1)
+        menu.add_generic_widget(select_method_pc2)
         menu.add_generic_widget(select_difficulty_pc1)
         menu.add_generic_widget(select_difficulty_pc2)
     elif mode == 3 and global_mode == "pvc":
@@ -151,6 +157,8 @@ def set_mode(value, mode):
         menu.remove_widget(nome1)
         menu.remove_widget(select_method)
         menu.remove_widget(select_heuristic)
+        menu.add_generic_widget(select_method_pc1)
+        menu.add_generic_widget(select_method_pc2)
         menu.add_generic_widget(select_difficulty_pc1)
         menu.add_generic_widget(select_difficulty_pc2)
 
@@ -206,6 +214,16 @@ def set_difficulty_pc2(value, difficulty2):
     elif difficulty2 == 3:
         global_pc2 = 5
 
+def set_method_pc1(value, method1):
+    global global_method1
+    if method1 == 1: global_method1 = 1
+    if method1 == 2: global_method1 ==2
+
+def set_method_pc2(value, method2):
+    global global_method2
+    if method2 == 1: global_method2 = 1
+    if method2 == 2: global_method2 ==2
+
 
 mytheme = pygame_menu.themes.THEME_DARK.copy()
 
@@ -228,6 +246,8 @@ select_method = menu.add.selector('Search Method: ',
                                   onchange=set_method)
 select_heuristic = menu.add.selector('Heuristic: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)],
                                      onchange=set_heuristic)
+select_method_pc1 = menu.add.selector('Pc1 method: ', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2)], onchange=set_method_pc1)
+select_method_pc2 = menu.add.selector('Pc2 method: ', [('Minimax', 1), ('Minimax com Alpha-Beta Pruning', 2)], onchange=set_method_pc2)
 select_difficulty_pc1 = menu.add.selector('Pc1 difficulty: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)],
                                           onchange=set_difficulty_pc1)
 select_difficulty_pc2 = menu.add.selector('Pc2 difficulty: ', [('Simple', 1), ('Advanced', 2), ('Complex', 3)],
@@ -235,6 +255,8 @@ select_difficulty_pc2 = menu.add.selector('Pc2 difficulty: ', [('Simple', 1), ('
 quit = menu.add.button('Quit', pygame_menu.events.EXIT)
 menu.remove_widget(select_method)
 menu.remove_widget(select_heuristic)
+menu.remove_widget(select_method_pc1)
+menu.remove_widget(select_method_pc2)
 menu.remove_widget(select_difficulty_pc1)
 menu.remove_widget(select_difficulty_pc2)
 

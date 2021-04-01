@@ -18,7 +18,7 @@ END_FONT = pygame.font.Font('freesansbold.ttf', 32)
 hintFont = pygame.font.Font('freesansbold.ttf', 10)
 talkFont = pygame.font.Font('freesansbold.ttf', 15)
 nameFont = pygame.font.Font('freesansbold.ttf', 25)
-global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2
+global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2, global_method1, global_method2
 global_mode = "pvp"
 global_heuristic = 2
 global_method = 1
@@ -26,6 +26,8 @@ global_pc1 = 1
 global_pc2 = 1
 global_name1 = ['Default1',1]
 global_name2 = ['Default2',1]
+global_method1 = 1
+global_method2 = 1
 
 xqcLines = ["Hikaru taught me this is the best move!", "BING!", "BANG!", "Chat, CHAT! I totally planned that.", "DUDE DUDE DUDE DUDE DUDE", "Jam a man of Fortune...", "Cheeto!", "...and J must seek my fortune!"]
 botezLines = ["Let the games begin!", "I wonder if there is a London for Neutreeko...", "I guess that is playable.", "I was already expecting that.", "Bang. You're making it too easy.", "*changes Spotify playlist*"]
@@ -98,6 +100,16 @@ def updateBars(WIN, p1, p2):
         p2Percentage = float(p2/total)
         pygame.draw.rect(WIN, WHITE, (680, 220, 25, p2Percentage * 450)) #Barra branca
         pygame.draw.rect(WIN, BLUE, (680, 220 + p2Percentage * 450, 25, p1Percentage * 450)) #Barra preta
+
+def print_stats(time, moves):
+    pygame.draw.rect(WIN, BLUE, (150, 185, 500, 30))
+    end_text = nameFont.render("AI speed: " + str(time) + "s " + "Nodes traced: " + str(moves), 1, BLACK)
+    WIN.blit(end_text, ( 160, 190))
+
+def print_stats_down(time, moves):
+    pygame.draw.rect(WIN, BLUE, (150, 675, 500, 30))
+    end_text = nameFont.render("AI speed: " + str(time) + "s " + "Nodes traced: " + str(moves), 1, BLACK)
+    WIN.blit(end_text, ( 160, 680))
 
 def drawName(WIN, diff):
     if diff == 2:
