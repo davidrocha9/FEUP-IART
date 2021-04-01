@@ -4,12 +4,12 @@ import time
 
 
 # Without cuts
-def method_1(game, ai, event, diff):
+def method_1(game, ai, event, diff, eval):
     if game.turn == 2:
         tic = time.perf_counter()
         ai.counter = 0
         new_board = None
-        value, new_board = ai.minimax(game.board, diff, 2, float('-inf'), float('+inf'))
+        value, new_board = ai.minimax(game.board, diff, 2, float('-inf'), float('+inf'), eval)
         toc = time.perf_counter()
         print_stats((round((toc-tic),4)),ai.counter)
         game.turn = 1
@@ -45,11 +45,11 @@ def method_1(game, ai, event, diff):
 
 
 # With Cuts
-def method_2(game, ai, event, diff):
+def method_2(game, ai, event, diff, eval):
     if game.turn == 2:
         tic = time.perf_counter()
         ai.counter = 0
-        value, new_board = ai.minimax_ab(game.board, diff, 2, float('-inf'), float('+inf'))
+        value, new_board = ai.minimax_ab(game.board, diff, 2, float('-inf'), float('+inf'), eval)
         toc = time.perf_counter()
         print_stats((round((toc-tic),4)),ai.counter)
         game.turn = 1
@@ -157,10 +157,10 @@ def computerplay(game, ai, diff1, diff2):
             display_message(WIN, str(winner))
             return 1
 
-def calculateHint(game, ai, WIN):
+def calculateHint(game, ai, WIN, eval):
     tic = time.perf_counter()
     ai.counter = 0
-    value, new_board = ai.minimax_ab(game.board, 4, game.turn, float('-inf'), float('+inf'))
+    value, new_board = ai.minimax_ab(game.board, 4, game.turn, float('-inf'), float('+inf'), eval)
     toc = time.perf_counter()
     print_stats((round((toc-tic),4)),ai.counter)
     oldBoard = game.board.board_as_string()
@@ -189,4 +189,3 @@ def calculateHint(game, ai, WIN):
     pygame.draw.rect(WIN, BACKGROUNDGREEN, (175 + selectedEndY * SQUARE_SIZE, 220 + selectedEndX * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
     pygame.display.update()
     time.sleep(1)
-    #pygame.draw.rect(WIN, WHITE, (100 + 100, 100, 100))

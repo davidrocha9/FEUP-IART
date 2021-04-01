@@ -7,20 +7,29 @@ import time
 class AI:
     def __init__(self):
         self.counter = 0
+        self.functionToUse = 0
 
-    def minimax(self, position, depth, player, alpha, beta):
+    def minimax(self, position, depth, player, alpha, beta, eval):
+        self.functionToUse = eval
+        print(self.functionToUse)
         if depth == 0 or position.checkWin() != -1:
             self.counter += 1
             if player == 1:
-                return position.evaluation() - depth, position
+                if eval == 1:
+                    return position.evaluationOnlyWin() - depth, position
+                else:
+                    return position.evaluation() - depth, position
             if player == 2:
-                return position.evaluation() + depth, position
+                if eval == 1:
+                    return position.evaluationOnlyWin() + depth, position
+                else:
+                    return position.evaluation() + depth, position
 
         if player == 1:
             maxEval = float('-inf')
             best_move = None
-            for move in self.get_all_moves(position, 1):
-                evaluation = self.minimax(move, depth - 1, 2, alpha, beta)[0]
+            for move in self.get_all_moves(position, 1, eval):
+                evaluation = self.minimax(move, depth - 1, 2, alpha, beta, eval)[0]
                 if evaluation > maxEval:
                     maxEval = evaluation
                     best_move = move
@@ -30,27 +39,33 @@ class AI:
         elif player == 2:
             minEval = float('+inf')
             best_move = None
-            for move in self.get_all_moves(position, 2):
-                evaluation = self.minimax_ab(move, depth - 1, 1, alpha, beta)[0]
+            for move in self.get_all_moves(position, 2, eval):
+                evaluation = self.minimax_ab(move, depth - 1, 1, alpha, beta, eval)[0]
                 if evaluation < minEval:
                     minEval = evaluation
                     best_move = move
 
             return minEval, best_move
 
-    def minimax_ab(self, position, depth, player, alpha, beta):
+    def minimax_ab(self, position, depth, player, alpha, beta, eval):
         if depth == 0 or position.checkWin() != -1:
             self.counter += 1
             if player == 1:
-                return position.evaluation() - depth, position
+                if eval == 1:
+                    return position.evaluationOnlyWin() - depth, position
+                else:
+                    return position.evaluation() - depth, position
             if player == 2:
-                return position.evaluation() + depth, position
+                if eval == 1:
+                    return position.evaluationOnlyWin() + depth, position
+                else:
+                    return position.evaluation() + depth, position
 
         if player == 1:
             maxEval = float('-inf')
             best_move = None
-            for move in self.get_all_moves(position, 1):
-                evaluation = self.minimax_ab(move, depth - 1, 2, alpha, beta)[0]
+            for move in self.get_all_moves(position, 1, eval):
+                evaluation = self.minimax_ab(move, depth - 1, 2, alpha, beta, eval)[0]
                 if evaluation > maxEval:
                     maxEval = evaluation
                     best_move = move
@@ -65,8 +80,8 @@ class AI:
         elif player == 2:
             minEval = float('+inf')
             best_move = None
-            for move in self.get_all_moves(position, 2):
-                evaluation = self.minimax_ab(move, depth - 1, 1, alpha, beta)[0]
+            for move in self.get_all_moves(position, 2, eval):
+                evaluation = self.minimax_ab(move, depth - 1, 1, alpha, beta, eval)[0]
                 if evaluation < minEval:
                     minEval = evaluation
                     best_move = move
@@ -87,9 +102,12 @@ class AI:
         return board
 
     def sortMoves(self, moves):
-        return moves.evaluation()
+        if self.functionToUse == 1:
+            return moves.evaluationOnlyWin()
+        else:
+            return moves.evaluation()
 
-    def get_all_moves(self, board, player):
+    def get_all_moves(self, board, player, evaluation):
         moves = []
         for piece in board.getPiecesCoordinates(player):
             valid_moves = board.getAIPossibleMoves(piece.row, piece.col)

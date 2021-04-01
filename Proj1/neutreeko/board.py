@@ -471,6 +471,20 @@ class Board:
 
         return eval + random.randint(0, 5)
 
+    def evaluationOnlyWin(self):
+        eval = 0
+        player1Pieces = self.getPiecesCoordinates(1)
+        player2Pieces = self.getPiecesCoordinates(2)
+
+        # Verificar 3 em linha
+        if self.check3inARow(player1Pieces):
+            return 5000
+        elif self.check3inARow(player2Pieces):
+            return -5000
+
+        return eval + random.randint(0, 5)
+
+
     def checkPieces(self, list):
         return self.check3inARow(list)
 

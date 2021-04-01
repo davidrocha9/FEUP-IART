@@ -21,6 +21,7 @@ nameFont = pygame.font.Font('freesansbold.ttf', 25)
 global global_mode, global_heuristic, global_method, global_pc1, global_pc2, global_name1, global_name2, global_method1, global_method2
 global_mode = "pvp"
 global_heuristic = 2
+global_evaluation = 1
 global_method = 1
 global_pc1 = 1
 global_pc2 = 1
@@ -28,6 +29,7 @@ global_name1 = ['Default1',1]
 global_name2 = ['Default2',1]
 global_method1 = 1
 global_method2 = 1
+againstPc = False
 
 xqcLines = ["Hikaru taught me this is the best move!", "BING!", "BANG!", "Chat, CHAT! I totally planned that.", "DUDE DUDE DUDE DUDE DUDE", "Jam a man of Fortune...", "Cheeto!", "...and J must seek my fortune!"]
 botezLines = ["Let the games begin!", "I wonder if there is a London for Neutreeko...", "I guess that is playable.", "I was already expecting that.", "Bang. You're making it too easy.", "*changes Spotify playlist*"]
@@ -42,15 +44,17 @@ def get_row_col_from_mouse(pos):
     return row, col
 
 
-def drawHintBoard(game):
+def drawHintBoard(game, againstPc):
     lamp = pygame.image.load(r'.\assets\lamp.png')
     counter1 = nameFont.render("Counter: " + str(game.p1HintCounter), 1, (0, 0, 0))
-    counter2 = nameFont.render("Counter: " + str(game.p2HintCounter), 1, (0, 0, 0))
+    if againstPc is False:
+        counter2 = nameFont.render("Counter: " + str(game.p2HintCounter), 1, (0, 0, 0))
     press = talkFont.render("Press H", 1, (0, 0, 0))
     press1 = talkFont.render("for a Hint!", 1, (0, 0, 0))
     pygame.draw.rect(WIN, CARDCOLOR, (15, 275, 150, 335), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     WIN.blit(counter1, (25, 530))
-    WIN.blit(counter2, (25, 330))
+    if againstPc is False:
+        WIN.blit(counter2, (25, 330))
     WIN.blit(press, (65, 465))
     WIN.blit(press1, (55, 480))
     WIN.blit(lamp, (20, 375))
