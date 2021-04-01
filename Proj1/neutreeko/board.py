@@ -310,7 +310,9 @@ class Board:
         return possibleMoves
 
     def check3inARow(self, list):
-        pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE), (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE), (list[2].y // SQUARE_SIZE) * 10 + (list[2].x // SQUARE_SIZE)]
+        pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE),
+                  (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE),
+                  (list[2].y // SQUARE_SIZE) * 10 + (list[2].x // SQUARE_SIZE)]
         pieces = sorted(pieces)
 
         # Direita
@@ -353,7 +355,9 @@ class Board:
         return eval
 
     def checkSurrounding(self, list):
-        pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE), (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE), (list[2].y // SQUARE_SIZE) * 10 + (list[2].x // SQUARE_SIZE)]
+        pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE),
+                  (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE),
+                  (list[2].y // SQUARE_SIZE) * 10 + (list[2].x // SQUARE_SIZE)]
         pieces = sorted(pieces)
         eval = 0
 
@@ -394,7 +398,7 @@ class Board:
     def check2inLine(self, pieces):
         eval = 0
 
-        #Direita
+        # Direita
         if pieces[0].row == pieces[1].row:
             eval += 5
         if pieces[0].row == pieces[2].row:
@@ -402,7 +406,7 @@ class Board:
         if pieces[1].row == pieces[2].row:
             eval += 5
 
-        #Baixo
+        # Baixo
         if pieces[0].col == pieces[1].col:
             eval += 5
         if pieces[0].col == pieces[2].col:
@@ -410,7 +414,7 @@ class Board:
         if pieces[1].col == pieces[2].col:
             eval += 5
 
-        #Baixo Direita
+        # Baixo Direita
         if pieces[1].col - pieces[0].col == pieces[1].row - pieces[0].row:
             eval += 5
         if pieces[2].col - pieces[0].col == pieces[2].row - pieces[0].row:
@@ -418,7 +422,7 @@ class Board:
         if pieces[2].col - pieces[1].col == pieces[2].row - pieces[1].row:
             eval += 5
 
-        #Baixo Esquerda
+        # Baixo Esquerda
         if pieces[0].col - pieces[1].col == pieces[0].row - pieces[1].row:
             eval += 5
         if pieces[0].col - pieces[2].col == pieces[0].row - pieces[2].row:
@@ -455,17 +459,17 @@ class Board:
 
         # Verificar 3 em linha
         if self.check3inARow(player1Pieces):
-            eval += 5000
-        if self.check3inARow(player2Pieces):
-            eval -= 5000
+            return 5000
+        elif self.check3inARow(player2Pieces):
+            return -5000
 
-        if (eval < 5000 and eval > -5000):
+        if 5000 > eval > -5000:
             eval += self.check2inLine(player1Pieces)
             eval -= self.check2inLine(player2Pieces)
             eval += self.checkSurrounding(player1Pieces)
             eval -= self.checkSurrounding(player2Pieces)
 
-        return eval + random.randint(0,5)
+        return eval + random.randint(0, 5)
 
     def checkPieces(self, list):
         return self.check3inARow(list)
