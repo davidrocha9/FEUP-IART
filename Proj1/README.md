@@ -44,7 +44,7 @@ python3 game.py
 
 ## In game:
 
-![Main Screen](https://imgur.com/a/6kIslXj)
+![Main Screen](https://i.imgur.com/hLsAX8t.png)
 
 1. Select one of the three available modes: Player vs Player, Player vs AI or AI vs AI.
 2. In the modes that use artificial intelligence we can choose the algorithm (Minimax with or without Alpha-Beta cuts), the difficulty (Simple, Advanced or Complex) and the evaluation function(Simple or Complex).
