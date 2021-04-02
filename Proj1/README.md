@@ -4,7 +4,7 @@ Neutreeko is a 5x5 board game. There are two players: Black and White. The initi
 
 ## Prerequisites:
 
-The game was developed using [Python](https://www.python.org) 3 and some of its modules that need to be previously installed: 
+The game was developed using [Python](https://www.python.org) 3, that needs to be installed and some of its modules: 
 
 - [Pygame](https://www.pygame.org/) 
 
