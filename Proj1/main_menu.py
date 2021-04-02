@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 from bots.botmethods import *
 
-#Game Loops
+# Game Loop
 def start():
     run = True
     clock = pygame.time.Clock()
@@ -16,11 +16,10 @@ def start():
         clock.tick(FPS)
         pygame.display.update()
 
-        # Used whenever a hint is asked
+        # If a player asks for a hint it doesn't need pygame events
         if game.pressedHint is True:
             if game.turn == 1:
                 game.p1HintCounter += 1
-            # Doesnt make sense to increment the variable if P2 is a bot (bots don't need hints neither can they ask for one)
             elif againstPc is False:
                 game.p2HintCounter += 1
             game.pressedHint = False
@@ -29,21 +28,18 @@ def start():
             pygame.display.update()
             if againstPc is False or (againstPc is True and game.turn != 2):
                 calculateHint(game, ai, WIN, againstPc)
-        #Used for Bot vs Bot
+        # CvC handler
         elif global_mode == "cvc":
             game.update()
             pygame.display.update()
-            if computerplay(game, ai, global_pc1, global_pc2) == 1:
+            if computerplay(game, ai, global_pc1, global_pc2, global_evaluation) == 1:
                 game.update()
                 pygame.display.update()
                 run = False
-        # Any game mode that isn't CvC needs pygame events for detection of mouse and keyboard input
         else:
             for event in pygame.event.get():
-                # If the user presses the X to quit
                 if event.type == pygame.QUIT:
                     run = False
-                # Game Loop for Player vs Player
                 elif global_mode == "pvp":
                     image = pygame.image.load(r'.\assets\defaultplayer.png')
                     player1 = nameFont.render(global_name1[0], True, (0, 0, 0))
@@ -53,16 +49,13 @@ def start():
                     WIN.blit(player1, (270, 740))
                     WIN.blit(image, (180, 100))
                     WIN.blit(image, (180, 680))
-                    # Checks if player asked for hint
                     if event.type == pygame.KEYDOWN:
                         if event.unicode == 'h':
                             game.pressedHint = True
-                    # Used for when mouse input is detected
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         pos = pygame.mouse.get_pos()
                         row, col = get_row_col_from_mouse(pos)
                         movePlayed = game.select(row, col)
-                        # Checks if move was made and if so, updates the interfaces
                         if movePlayed == 1:
                             eval1 = game.board.evaluationPlayer(1)
                             eval2 = game.board.evaluationPlayer(2)
@@ -73,7 +66,7 @@ def start():
                                 display_message(WIN, str(winner))
                                 time.sleep(1)
                                 run = False
-                # Player vs Computer Loop
+                # PvC handler
                 elif global_mode == "pvc":
                     image = pygame.image.load(r'.\assets\lamp.png')
                     image1 = pygame.image.load(r'.\assets\defaultplayer.png')
@@ -82,7 +75,6 @@ def start():
                     WIN.blit(image1, (180, 670))
                     WIN.blit(image, (20, 350))
                     drawHintBoard(game, againstPc)
-                    # Draws everything related to Bots Visual Stuff
                     if botStarted is False:
                         drawCards(WIN)
                         drawWelcome(WIN, global_heuristic)
@@ -100,20 +92,17 @@ def start():
                             global_name2[0] = "Hikaru"
                             image = pygame.image.load(r'.\assets\hikaru.png')
                             WIN.blit(image, (550, 100))
-                    # Only runs if it detects mouse input and if player didn't ask for hint
                     if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN or game.turn == 2 and game.pressedHint is False:
-                        # Basic minimax usage
                         if global_method == 1:
                             if method_1(game, ai, event, global_heuristic, global_evaluation) == 1:
                                 run = False
-                        # Minimax with Alpha/Beta Cuts usage
                         elif global_method == 2:
                             if method_2(game, ai, event, global_heuristic, global_evaluation) == 1:
                                 run = False
         game.update()
         pygame.display.update()
 
-# Starts the game loop
+
 def start_the_game():
     image = pygame.image.load(r'.\assets\back.jpg')
     WIN.blit(image, (0, 0))
@@ -293,7 +282,7 @@ menu.remove_widget(select_method_pc2)
 menu.remove_widget(select_difficulty_pc1)
 menu.remove_widget(select_difficulty_pc2)
 
-# Basic Main Loop
+
 def main():
     running = True
     while running:

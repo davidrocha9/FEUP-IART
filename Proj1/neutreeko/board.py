@@ -8,15 +8,15 @@ import time
 
 class Board:
     def __init__(self):
-        self.board = []
-        self.possibleMoves = []
-        self.lastMove = None
-        self.player1Pieces = []
-        self.player2Pieces = []
-        self.create_board()
-        self.boards = {}
+        self.board = [] # Board Matrix
+        self.possibleMoves = [] # Stores possible moves for a given player
+        self.lastMove = None # Last Move
+        self.player1Pieces = [] # PLayer 1 Pieces
+        self.player2Pieces = [] # Player 2 Pieces
+        self.create_board() # Initializes Board
+        self.boards = {} # Map that stores moves in order to check if there is a tie
 
-    # Draw function
+    # Draws squares for the board
     def draw_squares(self, win):
         for row in range(ROWS):
             for col in range(COLS):
@@ -27,7 +27,7 @@ class Board:
                     pygame.draw.rect(win, BLACK,
                                      (175 + row * SQUARE_SIZE, 220 + col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    # Stores pieces on respective arrays
+    # Assigns Pieces to each players
     def assignPieces(self):
         for x in range(5):
             for y in range(5):
@@ -38,7 +38,7 @@ class Board:
                     if piece.color == WHITE:
                         self.player2Pieces.append(piece)
 
-    # Initializes board
+    # Initializes Board
     def create_board(self):
         self.board.append([0, Piece(0, 1, WHITE), 0, Piece(0, 3, WHITE), 0])
         self.board.append([0, 0, Piece(1, 2, BLUE), 0, 0])
@@ -58,23 +58,23 @@ class Board:
     def getPiece(self, row, col):
         return self.board[row][col]
 
-    # Converts board to a string, used for checking ties (stores it in a map)
+    # Converts board to a string
     def board_as_string(self):
         result = ""
         for i in range(5):
             for j in range(5):
                 if self.board[i][j] == 0:
                     result += "0"
-                elif (isinstance(self.board[i][j], Piece)):
-                    if (self.board[i][j].color == (255, 255, 255)):
+                elif isinstance(self.board[i][j], Piece):
+                    if self.board[i][j].color == (255, 255, 255):
                         result += "2"
-                    elif (self.board[i][j].color == (61, 61, 61)):
+                    elif self.board[i][j].color == (61, 61, 61):
                         result += "1"
                 else:
                     result += "0"
         return result
 
-    # Processes a move
+    # Makes a move
     def move(self, startX, startY, endX, endY, color, player):
         self.board[startX][startY] = 0
         self.board[endX][endY] = Piece(endX, endY, color)
@@ -90,7 +90,7 @@ class Board:
                     self.player2Pieces[x] = self.board[endX][endY]
                     break
 
-    # Functions to check surrounding squares of a given piece
+    # Auxiliary functions that checks the surroundings of a piece in all directions
     def checkUp(self, row, col):
         if row == 0 or self.board[row - 1][col] != 0:
             return -1, -1
@@ -131,7 +131,7 @@ class Board:
 
         while True:
             col = col - 1
-            if col < 0:
+            if (col < 0):
                 break
             elif self.board[row][col] == 0:
                 continue
@@ -143,14 +143,14 @@ class Board:
         return row, col
 
     def checkRight(self, row, col):
-        if col == 4 or self.board[row][col + 1] != 0:
+        if (col == 4 or self.board[row][col + 1] != 0):
             return (-1, -1)
 
         while True:
             col = col + 1
             if (col > 4):
                 break
-            elif self.board[row][col] == 0:
+            elif (self.board[row][col] == 0):
                 continue
             else:
                 break
@@ -160,15 +160,15 @@ class Board:
         return row, col
 
     def checkUpRight(self, row, col):
-        if col == 4 or row == 0 or self.board[row - 1][col + 1] != 0:
-            return -1, -1
+        if (col == 4 or row == 0 or self.board[row - 1][col + 1] != 0):
+            return (-1, -1)
 
         while True:
             col = col + 1
             row = row - 1
-            if col > 4 or row < 0:
+            if (col > 4 or row < 0):
                 break
-            elif self.board[row][col] == 0:
+            elif (self.board[row][col] == 0):
                 continue
             else:
                 break
@@ -179,15 +179,15 @@ class Board:
         return row, col
 
     def checkUpLeft(self, row, col):
-        if col == 0 or row == 0 or self.board[row - 1][col - 1] != 0:
-            return -1, -1
+        if (col == 0 or row == 0 or self.board[row - 1][col - 1] != 0):
+            return (-1, -1)
 
         while True:
             col = col - 1
             row = row - 1
-            if col < 0 or row < 0:
+            if (col < 0 or row < 0):
                 break
-            elif self.board[row][col] == 0:
+            elif (self.board[row][col] == 0):
                 continue
             else:
                 break
@@ -198,15 +198,15 @@ class Board:
         return row, col
 
     def checkDownRight(self, row, col):
-        if col == 4 or row == 4 or self.board[row + 1][col + 1] != 0:
+        if (col == 4 or row == 4 or self.board[row + 1][col + 1] != 0):
             return (-1, -1)
 
         while True:
             col = col + 1
             row = row + 1
-            if col > 4 or row > 4:
+            if (col > 4 or row > 4):
                 break
-            elif self.board[row][col] == 0:
+            elif (self.board[row][col] == 0):
                 continue
             else:
                 break
@@ -217,15 +217,15 @@ class Board:
         return row, col
 
     def checkDownLeft(self, row, col):
-        if col == 0 or row == 4 or self.board[row + 1][col - 1] != 0:
-            return -1, -1
+        if (col == 0 or row == 4 or self.board[row + 1][col - 1] != 0):
+            return (-1, -1)
 
         while True:
             col = col - 1
             row = row + 1
-            if col < 0 or row > 4:
+            if (col < 0 or row > 4):
                 break
-            elif self.board[row][col] == 0:
+            elif (self.board[row][col] == 0):
                 continue
             else:
                 break
@@ -235,7 +235,7 @@ class Board:
 
         return row, col
 
-    # Retrieves all possible moves for a specific piece
+    # Returns possible moves for a given state
     def getPossibleMoves(self, row, col):
         possibleMoves = []
         moveRow, moveCol = self.checkUp(row, col)
@@ -316,7 +316,7 @@ class Board:
 
         return possibleMoves
 
-    # Checks if there is 3 pieces of the same color in a row
+    # Checks for 3 in a row
     def check3inARow(self, list):
         pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE),
                   (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE),
@@ -324,21 +324,21 @@ class Board:
         pieces = sorted(pieces)
 
         # Direita
-        if pieces[0] + 1 == pieces[1] and pieces[1] + 1 == pieces[2]:
+        if (pieces[0] + 1 == pieces[1] and pieces[1] + 1 == pieces[2]):
             return True
         # Direita Baixo
-        if pieces[0] + 11 == pieces[1] and pieces[1] + 11 == pieces[2]:
+        if (pieces[0] + 11 == pieces[1] and pieces[1] + 11 == pieces[2]):
             return True
         # Baixo
-        if pieces[0] + 10 == pieces[1] and pieces[1] + 10 == pieces[2]:
+        if (pieces[0] + 10 == pieces[1] and pieces[1] + 10 == pieces[2]):
             return True
         # Esquerda Baixo
-        if pieces[0] + 9 == pieces[1] and pieces[1] + 9 == pieces[2]:
+        if (pieces[0] + 9 == pieces[1] and pieces[1] + 9 == pieces[2]):
             return True
 
         return False
 
-    # Checks if there is 2 pieces of the same color in a row
+    # Checks for 2 in a row
     def check2inARow(self, list):
         pieces = []
         eval = 0
@@ -349,21 +349,21 @@ class Board:
         for i in range(3):
             for x in range(i + 1, 3):
                 # Direita
-                if pieces[i] + 1 == pieces[x]:
+                if (pieces[i] + 1 == pieces[x]):
                     eval += 500
                 # Direita Baixo
-                if pieces[i] + 11 == pieces[x]:
+                if (pieces[i] + 11 == pieces[x]):
                     eval += 500
                 # Baixo
-                if pieces[i] + 10 == pieces[x]:
+                if (pieces[i] + 10 == pieces[x]):
                     eval += 500
                 # Esquerda Baixo
-                if pieces[i] + 9 == pieces[x]:
+                if (pieces[i] + 9 == pieces[x]):
                     eval += 500
 
         return eval
 
-    # Checks if there is 2 pieces next to each other
+    # Checks a piece surroundings
     def checkSurrounding(self, list):
         pieces = [(list[0].y // SQUARE_SIZE) * 10 + (list[0].x // SQUARE_SIZE),
                   (list[1].y // SQUARE_SIZE) * 10 + (list[1].x // SQUARE_SIZE),
@@ -405,7 +405,7 @@ class Board:
 
         return eval
 
-    # Checks if there are two pieces of the same color on the same row/column/diagonal
+    # Checks if there is 2 pieces in the same row/column/diagonal
     def check2inLine(self, pieces):
         eval = 0
 
@@ -449,7 +449,7 @@ class Board:
         elif player == 2:
             return self.player2Pieces
 
-    # Only evaluates the board
+    # Returns the board evaluation for a specific player
     def evaluationPlayer(self, player):
         eval = 0
         playerPieces = self.getPiecesCoordinates(player)
@@ -464,6 +464,7 @@ class Board:
 
         return eval
 
+    # Returns the evaluation of the board
     def evaluation(self):
         eval = 0
         player1Pieces = self.getPiecesCoordinates(1)
@@ -475,6 +476,8 @@ class Board:
         elif self.check3inARow(player2Pieces):
             return -5000
 
+        # Verificar se existe 2 em Linha/Coluna/Diagonal
+        # e 2 peças adjacentes
         if 5000 > eval > -5000:
             eval += self.check2inLine(player1Pieces)
             eval -= self.check2inLine(player2Pieces)
@@ -483,6 +486,7 @@ class Board:
 
         return eval + random.randint(0, 5)
 
+    # Returns a simpler evaluation of the board
     def evaluationOnlyWin(self):
         eval = 0
         player1Pieces = self.getPiecesCoordinates(1)
@@ -500,24 +504,22 @@ class Board:
     def checkPieces(self, list):
         return self.check3inARow(list)
 
-    # Checks Win
     def checkWin(self):
         player1Pieces = self.getPiecesCoordinates(1)
         player2Pieces = self.getPiecesCoordinates(2)
-        if self.check3inARow(player1Pieces):
+        if (self.check3inARow(player1Pieces)):
             return 1
-        elif self.check3inARow(player2Pieces):
+        elif (self.check3inARow(player2Pieces)):
             return 2
 
         return -1
 
-    # Checks win and tie
     def checkWinAndTie(self):
         player1Pieces = self.getPiecesCoordinates(1)
         player2Pieces = self.getPiecesCoordinates(2)
-        if self.checkPieces(player1Pieces):
+        if (self.checkPieces(player1Pieces)):
             return 1
-        elif self.checkPieces(player2Pieces):
+        elif (self.checkPieces(player2Pieces)):
             return 2
 
         if self.board_as_string() in self.boards.keys():
@@ -525,7 +527,7 @@ class Board:
         else:
             self.boards.update({self.board_as_string(): 1})
 
-        if self.boards[self.board_as_string()] == 3:
+        if (self.boards[self.board_as_string()] == 3):
             return 0
 
         return -1

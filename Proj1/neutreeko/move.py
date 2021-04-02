@@ -13,12 +13,11 @@ class Move:
         self.y = 0
         self.calc_pos()
 
-    # Calculates x and y based on mouse coordinates
+
     def calc_pos(self):
         self.x = SQUARE_SIZE * self.col + SQUARE_SIZE // 2
         self.y = SQUARE_SIZE * self.row + SQUARE_SIZE // 2
 
-    # Draws the Move Dot
     def draw(self, win):
         radius = SQUARE_SIZE//2 - self.PADDING
         pygame.draw.circle(win, self.color, (175 + self.x, 220 + self.y), radius)

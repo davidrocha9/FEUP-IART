@@ -8,40 +8,42 @@ class Game:
         self.win = win
 
     def _init(self):
-        self.selected = None
-        self.board = Board()
-        self.turn = 1
-        self.player1Pieces = []
-        self.player2Pieces = []
-        self.currentPossibleMoves = []
-        self.pressedHint = False
-        self.p1HintCounter = 0
-        self.p2HintCounter = 0
+        self.selected = None # Selected Piece
+        self.board = Board() # Initializes Board
+        self.turn = 1 # Player Turn
+        self.player1Pieces = [] # Player 1 Pieces
+        self.player2Pieces = [] # Player 2 Pieces
+        self.currentPossibleMoves = [] # Current Possible Moves
+        self.pressedHint = False # Boolean to check if player asked for hint
+        self.p1HintCounter = 0 # Counts player 1 hints
+        self.p2HintCounter = 0 # Counts player 2 hints
 
-    # Used for selecting piece to play and square to move to
+    # Selects piece/tile based on mouse input coordinates
     def select(self, row, col):
-        self.player2Pieces = self.board.getPiecesCoordinates(2)
         self.player1Pieces = self.board.getPiecesCoordinates(1)
-        # Changing selected piece
-        if self.turn == 1:
-            for i in self.player1Pieces:
-                if (i.y // SQUARE_SIZE, i.x // SQUARE_SIZE) == (row, col):
-                    self.selected = None
-                    for pair in self.currentPossibleMoves:
-                        if pair == (row, col):
-                            continue
-                        else:
-                            self.board.board[pair[0]][pair[1]] = 0
-        else:
-            for i in self.player2Pieces:
-                if (i.y // SQUARE_SIZE, i.x // SQUARE_SIZE) == (row, col):
-                    self.selected = None
-                    for pair in self.currentPossibleMoves:
-                        if pair == (row, col):
-                            continue
-                        else:
-                            self.board.board[pair[0]][pair[1]] = 0
-        # Selecting piece for first time
+        self.player2Pieces = self.board.getPiecesCoordinates(2)
+
+        # If a piece is already selected and player chooses another piece, switches to the new piece
+        if self.selected:
+            if self.turn == 1:
+                for i in self.player1Pieces:
+                    if (i.y // SQUARE_SIZE, i.x // SQUARE_SIZE) == (row, col):
+                        self.selected = None
+                        for pair in self.currentPossibleMoves:
+                            if pair == (row, col):
+                                continue
+                            else:
+                                self.board.board[pair[0]][pair[1]] = 0
+            else:
+                for i in self.player2Pieces:
+                    if (i.y // SQUARE_SIZE, i.x // SQUARE_SIZE) == (row, col):
+                        self.selected = None
+                        for pair in self.currentPossibleMoves:
+                            if pair == (row, col):
+                                continue
+                            else:
+                                self.board.board[pair[0]][pair[1]] = 0
+        # Selects a piece
         if self.selected is None:
             if self.turn == 1:
                 for piece in self.player1Pieces:
@@ -59,7 +61,7 @@ class Game:
                     if row == pieceRow and col == pieceCol:
                         self.selected = self.board.getPiece(row, col)
                         self.currentPossibleMoves = self.board.getPossibleMoves(row, col)
-        # Making the move
+        # Executes the move
         else:
             selectedY = SQUARE_SIZE * col + SQUARE_SIZE // 2 
             selectedX = SQUARE_SIZE * row + SQUARE_SIZE // 2
@@ -79,13 +81,13 @@ class Game:
                 self.selected = None
                 self.turn = 1 + (self.turn % 2)
                 for pair in self.currentPossibleMoves:
-                    if (pair == (endX, endY)):
+                    if pair == (endX, endY):
                         continue
                     else:
                         self.board.board[pair[0]][pair[1]] = 0
                 return 1
         
-    # Updates game state
+
     def update(self):
         self.board.draw(self.win)
         pygame.display.update()

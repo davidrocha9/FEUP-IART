@@ -12,7 +12,6 @@ from collections import Counter
 
 FPS = 60
 
-# Core Variables used for game handling
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Neutreeko')
 END_FONT = pygame.font.Font('freesansbold.ttf', 32)
@@ -32,12 +31,10 @@ global_method1 = 1
 global_method2 = 1
 againstPc = False
 
-# List with bot line speech
 xqcLines = ["Hikaru taught me this is the best move!", "BING!", "BANG!", "Chat, CHAT! I totally planned that.", "DUDE DUDE DUDE DUDE DUDE", "Jam a man of Fortune...", "Cheeto!", "...and J must seek my fortune!"]
 botezLines = ["Let the games begin!", "I wonder if there is a London for Neutreeko...", "I guess that is playable.", "I was already expecting that.", "Bang. You're making it too easy.", "*changes Spotify playlist*"]
 hikaruLines = ["This is all theory.", "*looks at ceiling and scratches head*", "Takes, takes and takes... I think this is winning.", "Is this a move? Probably. Let's play it.", "Let's keep going.", "Chat, this has to be winning!", "I'll just play my juicer here.", "If takes I just take, and then I must be winning.", "I go here, here, here and here and I win."]
 
-# Calculates x and y based on mouse input position
 def get_row_col_from_mouse(pos):
     x, y = pos
     x -= 175
@@ -46,7 +43,7 @@ def get_row_col_from_mouse(pos):
     col = x // SQUARE_SIZE
     return row, col
 
-# Draws Hint Panel
+
 def drawHintBoard(game, againstPc):
     lamp = pygame.image.load(r'.\assets\lamp.png')
     counter1 = nameFont.render("Counter: " + str(game.p1HintCounter), 1, (0, 0, 0))
@@ -62,7 +59,7 @@ def drawHintBoard(game, againstPc):
     WIN.blit(press1, (55, 480))
     WIN.blit(lamp, (20, 375))
 
-# Displays ending message
+# To do colocar estatisticas
 def display_message(WIN, winner):
     rect = pygame.draw.rect(WIN, CARDCOLOR, (150, 250, 500, 300), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     if winner == "1":
@@ -90,19 +87,16 @@ def display_message(WIN, winner):
         pygame.display.update()
         time.sleep(3)
 
-# Draws evaluation bars
 def drawBars(WIN):
     pygame.draw.rect(WIN, WHITE, (680, 220, 25, 225)) #Barra branca
     pygame.draw.rect(WIN, BLUE, (680, 445, 25, 225)) #Barra preta
 
-# Draws bot cards
 def drawCards(WIN):
     #WIN.fill(PURPLE)
     pygame.draw.rect(WIN, CARDCOLOR, (150, 90, 500, 100), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.draw.rect(WIN, WHITE, (680, 220, 25, 225)) #Barra branca
     pygame.draw.rect(WIN, BLUE, (680, 445, 25, 225)) #Barra preta
 
-# Updates evaluation bars
 def updateBars(WIN, p1, p2):
     total = p1 + p2
     if total > 0:
@@ -111,7 +105,6 @@ def updateBars(WIN, p1, p2):
         pygame.draw.rect(WIN, WHITE, (680, 220, 25, p2Percentage * 450)) #Barra branca
         pygame.draw.rect(WIN, BLUE, (680, 220 + p2Percentage * 450, 25, p1Percentage * 450)) #Barra preta
 
-# Prints bot stats after making a move
 def print_stats(time, moves):
     pygame.draw.rect(WIN, BLUE, (150, 185, 500, 30))
     end_text = nameFont.render("AI speed: " + str(time) + "s " + "Nodes traced: " + str(moves), 1, BLACK)
@@ -122,7 +115,6 @@ def print_stats_down(time, moves):
     end_text = nameFont.render("AI speed: " + str(time) + "s " + "Nodes traced: " + str(moves), 1, BLACK)
     WIN.blit(end_text, ( 160, 680))
 
-#Draws bot's name
 def drawName(WIN, diff):
     if diff == 2:
         name = END_FONT.render("XQC - Famous Twitch Streamer", True, (0,0,0))
@@ -134,7 +126,6 @@ def drawName(WIN, diff):
         name = END_FONT.render("Hikaru Nakamura - Chess Grandmaster", True, (0,0,0))
         WIN.blit(name, (100, 30))
 
-# Draws welcoming message from bots
 def drawWelcome(WIN, diff):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
@@ -146,7 +137,6 @@ def drawWelcome(WIN, diff):
         hint = talkFont.render("Let's see what you have prepared for me.", True, (0,0,0))
     WIN.blit(hint, (175, 130))
 
-# Draws a random bot's line after making a move
 def drawLine(WIN, diff):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
@@ -161,7 +151,6 @@ def drawLine(WIN, diff):
         speach = talkFont.render(hikaruLines[x], True, (0,0,0))
     WIN.blit(speach, (175, 130))
 
-# Draws bot's line after a game ends
 def drawEnding(player, diff, WIN):
     pygame.draw.rect(WIN, WHITE, (160, 100, 350, 80), width=0, border_radius=10, border_top_left_radius=10, border_top_right_radius=10, border_bottom_left_radius=10, border_bottom_right_radius=10)
     pygame.gfxdraw.filled_polygon(WIN, [[500, 115], [500, 160], [550, 138]], WHITE)
