@@ -5,6 +5,7 @@ import time
 
 # Without cuts
 def method_1(game, ai, event, diff, eval):
+    # Bot Turn
     if game.turn == 2:
         tic = time.perf_counter()
         ai.counter = 0
@@ -24,6 +25,7 @@ def method_1(game, ai, event, diff, eval):
             display_message(WIN, str(winner))
             return 1
         drawLine(WIN, diff)
+    # Player Turn
     else:
         if event.type == pygame.KEYDOWN:
             if event.unicode == 'h':
@@ -46,6 +48,7 @@ def method_1(game, ai, event, diff, eval):
 
 # With Cuts
 def method_2(game, ai, event, diff, eval):
+    # Bot Turn
     if game.turn == 2:
         tic = time.perf_counter()
         ai.counter = 0
@@ -64,6 +67,7 @@ def method_2(game, ai, event, diff, eval):
             display_message(WIN, str(winner))
             return 1
         drawLine(WIN, diff)
+    # Player Turn
     else:
         if event.type == pygame.KEYDOWN:
             if event.unicode == 'h':
@@ -83,6 +87,7 @@ def method_2(game, ai, event, diff, eval):
                     display_message(WIN, str(winner))
                     return 1
 
+# Used for calculating hints
 def computerplay(game, ai, diff1, diff2):
     if game.turn == 2 and global_method2 == 1:
         tic = time.perf_counter()

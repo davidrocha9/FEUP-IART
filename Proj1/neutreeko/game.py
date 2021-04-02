@@ -1,10 +1,6 @@
 import pygame
-from .constants import WHITE, LIGHTBLUE, BLUE, SQUARE_SIZE
+from .constants import WHITE, BLUE, SQUARE_SIZE
 from neutreeko.board import Board
-from .piece import Piece
-from .move import Move
-from random import random
-from copy import deepcopy
 
 class Game:
     def __init__(self, win):
@@ -22,37 +18,37 @@ class Game:
         self.p1HintCounter = 0
         self.p2HintCounter = 0
 
+    # Used for selecting piece to play and square to move to
     def select(self, row, col):
-        self.player1Pieces = self.board.getPiecesCoordinates(1)
         self.player2Pieces = self.board.getPiecesCoordinates(2)
-
-        if (self.selected):
-            if (self.turn == 1):
-                for i in self.player1Pieces:
-                    if ((i.y // SQUARE_SIZE,i.x // SQUARE_SIZE) == (row,col)):
-                        self.selected = None
-                        for pair in self.currentPossibleMoves:
-                            if (pair == (row, col)):
-                                continue
-                            else:
-                                self.board.board[pair[0]][pair[1]] = 0
-            else:
-                for i in self.player2Pieces:
-                    if ((i.y // SQUARE_SIZE,i.x // SQUARE_SIZE) == (row,col)):
-                        self.selected = None
-                        for pair in self.currentPossibleMoves:
-                            if (pair == (row, col)):
-                                continue
-                            else:
-                                self.board.board[pair[0]][pair[1]] = 0
-
-        if (self.selected is None):
-            if (self.turn == 1):
+        self.player1Pieces = self.board.getPiecesCoordinates(1)
+        # Changing selected piece
+        if self.turn == 1:
+            for i in self.player1Pieces:
+                if (i.y // SQUARE_SIZE, i.x // SQUARE_SIZE) == (row, col):
+                    self.selected = None
+                    for pair in self.currentPossibleMoves:
+                        if pair == (row, col):
+                            continue
+                        else:
+                            self.board.board[pair[0]][pair[1]] = 0
+        else:
+            for i in self.player2Pieces:
+                if (i.y // SQUARE_SIZE, i.x // SQUARE_SIZE) == (row, col):
+                    self.selected = None
+                    for pair in self.currentPossibleMoves:
+                        if pair == (row, col):
+                            continue
+                        else:
+                            self.board.board[pair[0]][pair[1]] = 0
+        # Selecting piece for first time
+        if self.selected is None:
+            if self.turn == 1:
                 for piece in self.player1Pieces:
                     pieceRow = piece.y // SQUARE_SIZE
                     pieceCol = piece.x // SQUARE_SIZE
 
-                    if (row == pieceRow and col == pieceCol):
+                    if row == pieceRow and col == pieceCol:
                         self.selected = self.board.getPiece(row, col)
                         self.currentPossibleMoves = self.board.getPossibleMoves(row, col)          
             else:
@@ -60,9 +56,10 @@ class Game:
                     pieceRow = piece.y // SQUARE_SIZE
                     pieceCol = piece.x // SQUARE_SIZE
 
-                    if (row == pieceRow and col == pieceCol):
+                    if row == pieceRow and col == pieceCol:
                         self.selected = self.board.getPiece(row, col)
                         self.currentPossibleMoves = self.board.getPossibleMoves(row, col)
+        # Making the move
         else:
             selectedY = SQUARE_SIZE * col + SQUARE_SIZE // 2 
             selectedX = SQUARE_SIZE * row + SQUARE_SIZE // 2
@@ -73,8 +70,8 @@ class Game:
             endX = selectedX // SQUARE_SIZE
             endY = selectedY // SQUARE_SIZE
 
-            if ((endX, endY) in self.currentPossibleMoves):
-                if (self.turn == 1):            
+            if (endX, endY) in self.currentPossibleMoves:
+                if self.turn == 1:
                     self.board.move(startX, startY, endX, endY, BLUE, 1)
                 else:
                     self.board.move(startX, startY, endX, endY, WHITE, 2)
@@ -88,7 +85,7 @@ class Game:
                         self.board.board[pair[0]][pair[1]] = 0
                 return 1
         
-
+    # Updates game state
     def update(self):
         self.board.draw(self.win)
         pygame.display.update()
