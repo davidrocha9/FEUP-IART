@@ -1,3 +1,4 @@
+from neutreeko.move import Move
 from neutreeko.piece import Piece
 from utils import *
 import time
@@ -171,6 +172,12 @@ def computerplay(game, ai, diff1, diff2, eval):
 
 # Auxiliary function used for calculating bot hints
 def calculateHint(game, ai, WIN, eval):
+    for x in range(0,5):
+        for y in range(0,5):
+            if isinstance(game.board.board[x][y], Move):
+                game.board.board[x][y] = 0
+    game.update()
+    pygame.display.update()
     tic = time.perf_counter()
     ai.counter = 0
     value, new_board = ai.minimax_ab(game.board, 4, game.turn, float('-inf'), float('+inf'), eval)
