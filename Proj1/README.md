@@ -25,7 +25,7 @@ You can run the programm in a Python IDE, or simply in the command line.
 
 ### In a Python IDE
 
-- Just press run on the program while being in the main_menu.py file.
+- Just press run on the neutreeko.py file.
 
 ### In the command line:
 
